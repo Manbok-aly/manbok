@@ -3,11 +3,322 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manbok의 정보보안 기술 블로그">
   <title>Manbok's Security Blog</title>
+  <style>
+    :root {
+      --bg: #0c111b;
+      --panel: #151d2a;
+      --border: #293548;
+      --text: #e8eef6;
+      --muted: #9aa9bc;
+      --accent: #62e6b0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.7;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container {
+      max-width: 1050px;
+      margin: auto;
+      padding: 0 24px;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(12,17,27,.95);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .logo span, .accent { color: var(--accent); }
+    nav { display: flex; flex-wrap: wrap; gap: 20px; }
+    nav a { font-size: 14px; color: var(--muted); }
+    nav a:hover { color: var(--accent); }
+    .hero { padding: 105px 0 85px; }
+    .terminal {
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: clamp(35px, 6vw, 62px);
+      line-height: 1.2;
+      margin: 20px 0;
+      letter-spacing: -2px;
+    }
+    .subtitle {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 610px;
+    }
+    .tags { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+    .tag {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 12px;
+    }
+    section { scroll-margin-top: 100px; }
+    .section { padding: 35px 0 65px; }
+    .section h2 {
+      font-size: 27px;
+      margin: 0 0 8px;
+    }
+    .description { color: var(--muted); margin: 0 0 30px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .card {
+      display: block;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 25px;
+      border-radius: 14px;
+      transition: .2s;
+    }
+    a.card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .card-icon {
+      color: var(--accent);
+      font-size: 24px;
+      margin-bottom: 18px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 17px; }
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+    .records {
+      display: grid;
+      gap: 16px;
+    }
+    .record {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      scroll-margin-top: 100px;
+    }
+    .record h3 { font-size: 17px; margin: 0 0 5px; }
+    .record p {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+    .about {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 28px;
+      border-radius: 14px;
+    }
+    .about p { color: var(--muted); }
+    .github-link {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: 70px 0; }
+    }
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: 1fr; }
+      .nav { flex-direction: column; padding: 14px 0; }
+      nav { justify-content: center; gap: 14px; }
+      .container { padding: 0 18px; }
+      .hero { padding: 55px 0; }
+      section, .record { scroll-margin-top: 130px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Manbok's Security Blog</h1>
-  <p>정보보안 학습 및 활동 기록 블로그입니다.</p>
+
+<header>
+  <div class="container nav">
+    <a class="logo" href="#home">MANBOK<span>.LOG</span></a>
+    <nav aria-label="메인 메뉴">
+      <a href="#home">Home</a>
+      <a href="#categories">Categories</a>
+      <a href="#posts">Posts</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero" id="home">
+    <div class="terminal">~/security-blog $ whoami</div>
+    <h1>Learning.<br>Building.<br><span class="accent">Breaking.</span></h1>
+    <p class="subtitle">
+      정보보안 학습, 개발 프로젝트, CTF 문제 풀이,
+      연구 및 활동 경험을 기록하는 개인 기술 블로그입니다.
+    </p>
+    <div class="tags">
+      <span class="tag">Cybersecurity</span>
+      <span class="tag">Development</span>
+      <span class="tag">CTF / Wargame</span>
+      <span class="tag">Research</span>
+    </div>
+  </section>
+
+  <section class="section" id="categories">
+    <h2>Explore Categories</h2>
+    <p class="description">분야별 학습 및 활동 기록</p>
+
+    <div class="grid">
+
+      <a class="card" href="#development">
+        <div class="card-icon">⌘</div>
+        <h3>개발</h3>
+        <p>프로그래밍, 프로젝트, 개발 과정</p>
+      </a>
+
+      <a class="card" href="#ctf">
+        <div class="card-icon">⚑</div>
+        <h3>CTF / Wargame</h3>
+        <p>워게임 풀이 및 Write-up</p>
+      </a>
+
+      <a class="card" href="#bugbounty">
+        <div class="card-icon">◇</div>
+        <h3>Bug Bounty</h3>
+        <p>취약점 연구 및 분석 기록</p>
+      </a>
+
+      <a class="card" href="#notes">
+        <div class="card-icon">▤</div>
+        <h3>블로그 / 기출문서</h3>
+        <p>학습 노트 및 문서 정리</p>
+      </a>
+
+      <a class="card" href="#research">
+        <div class="card-icon">◈</div>
+        <h3>논문 / 컨퍼런스</h3>
+        <p>논문 리뷰 및 행사 기록</p>
+      </a>
+
+      <a class="card" href="#awards">
+        <div class="card-icon">★</div>
+        <h3>공모전 / 자격증</h3>
+        <p>대회, 자격증, 준비 과정</p>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section" id="posts">
+    <h2>Learning Archive</h2>
+    <p class="description">
+      카테고리를 선택하면 해당 기록으로 이동합니다.
+    </p>
+
+    <div class="records">
+
+      <article class="record" id="development">
+        <h3>⌘ 개발</h3>
+        <p>Development & Projects</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+      <article class="record" id="ctf">
+        <h3>⚑ CTF / Wargame</h3>
+        <p>CTF Write-ups & Wargame Solutions</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+      <article class="record" id="bugbounty">
+        <h3>◇ Bug Bounty</h3>
+        <p>Vulnerability Research</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+      <article class="record" id="notes">
+        <h3>▤ 블로그 / 기출문서</h3>
+        <p>Study Notes & Documents</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+      <article class="record" id="research">
+        <h3>◈ 논문 / 컨퍼런스</h3>
+        <p>Research Papers & Conferences</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+      <article class="record" id="awards">
+        <h3>★ 공모전 / 자격증</h3>
+        <p>Competitions & Certifications</p>
+        <div class="empty">아직 작성된 게시글이 없습니다.</div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <h2>About Me</h2>
+    <p class="description">블로그 운영자 소개</p>
+    <div class="about">
+      <h3>Hello, I'm Manbok.</h3>
+      <p>
+        정보보안과 소프트웨어 개발을 학습하고 있습니다.
+        이 블로그에는 학습 과정과 프로젝트 기록을 정리합니다.
+      </p>
+      <a class="github-link"
+         href="https://github.com/Manbok-aly"
+         target="_blank" rel="noopener noreferrer">
+         GitHub Profile ↗
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    © 2026 Manbok. Built with GitHub Pages.
+  </div>
+</footer>
+
 </body>
 </html>
