@@ -1,474 +1,662 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Manbok의 정보보안 블로그" />   
-  <title>Manbok's Security Blog</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manbok의 블로그">
+  <title>Manbok | Security Blog</title>
+
   <style>
     :root {
-      --bg: #0b0d12;
-      --panel: #131720;
-      --text: #f3f5f7;
-      --muted: #9aa3b2;
+      --bg: #0c0e13;
+      --sidebar: #1c1d22;
+      --card: #151922;
+      --text: #f4f4f6;
+      --muted: #a0a6b4;
+      --border: #292f3c;
       --accent: #f08b4f;
-      --border: #232936;
+      --sidebar-width: 255px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    body.light {
+      --bg: #f7f8fb;
+      --sidebar: #ffffff;
+      --card: #ffffff;
+      --text: #1b2029;
+      --muted: #647084;
+      --border: #dce0e8;
+      --accent: #c96a32;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
+      margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", "Noto Sans KR", sans-serif;
+      line-height: 1.7;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    .container {
-      width: min(1100px, 92%);
-      margin: 0 auto;
-    }
+    button { font: inherit; }
 
-    header {
-      position: sticky;
+    /* LEFT SIDEBAR */
+    .sidebar {
+      position: fixed;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      background: rgba(11, 13, 18, 0.85);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .nav {
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      padding: 18px 0;
+      padding: 65px 25px 28px;
+      z-index: 20;
     }
 
-    .logo {
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    nav {
-      display: flex;
-      gap: 22px;
-      flex-wrap: wrap;
-    }
-
-    nav a {
-      color: var(--muted);
-      font-size: 0.95rem;
-      transition: 0.2s;
-    }
-
-    nav a:hover {
-      color: var(--accent);
-    }
-
-    /* HERO */
-    .hero {
+    .profile-photo {
       position: relative;
-      min-height: 92vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      width: 145px;
+      height: 175px;
+      background: linear-gradient(135deg, #3d3540, #6c4f46);
       overflow: hidden;
-      background:
-        radial-gradient(circle at center bottom, rgba(240,139,79,0.18), transparent 35%),
-        linear-gradient(to bottom, #090b10, #0b0d12 70%);
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 2;
-      padding: 80px 0 180px;
-    }
-
-    .hero-sub {
-      color: var(--accent);
-      font-size: 1.2rem;
-      margin-bottom: 24px;
-    }
-
-    .hero-title {
-      font-size: clamp(2.8rem, 7vw, 5.8rem);
-      font-weight: 900;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      margin-bottom: 24px;
-    }
-
-    .hero-title .point {
-      color: var(--accent);
-    }
-
-    .hero-desc {
-      max-width: 760px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 1.08rem;
-    }
-
-    .hero-arc {
-      position: absolute;
-      left: 50%;
-      bottom: -140px;
-      transform: translateX(-50%);
-      width: 1400px;
-      height: 420px;
-      border-top-left-radius: 50% 100%;
-      border-top-right-radius: 50% 100%;
-      background:
-        radial-gradient(circle at center top, rgba(240,139,79,0.18), transparent 35%),
-        #1b1d23;
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 -20px 50px rgba(240,139,79,0.1);
-      opacity: 0.95;
-    }
-
-    .hero-arc::before {
-      content: "";
-      position: absolute;
-      inset: 38px 140px auto;
-      height: 220px;
-      border-top-left-radius: 50% 100%;
-      border-top-right-radius: 50% 100%;
-      border-top: 1px solid rgba(255,255,255,0.12);
-    }
-
-    /* SECTIONS */
-    section {
-      padding: 90px 0;
-    }
-
-    .section-label {
-      color: #6d7583;
-      font-size: 0.95rem;
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-size: clamp(2rem, 4vw, 3rem);
-      margin-bottom: 18px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-    }
-
-    .section-desc {
-      color: var(--muted);
-      max-width: 760px;
-      margin-bottom: 40px;
-    }
-
-    /* INTRO */
-    .intro-grid {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 36px;
-      align-items: start;
+      place-items: center;
     }
 
-    .intro-main h3 {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      line-height: 1.05;
-      margin-bottom: 22px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
+    .profile-photo span {
+      font-size: 66px;
+      font-weight: 800;
+      color: #f5d1b9;
     }
 
-    .intro-main h3 .accent {
-      color: var(--accent);
+    .profile-photo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .intro-main p {
-      color: var(--muted);
-      font-size: 1.05rem;
-      max-width: 680px;
-    }
-
-    .info-boxes {
-      display: grid;
-      gap: 16px;
-    }
-
-    .info-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px;
-    }
-
-    .info-box .label {
-      color: #7d8797;
-      font-size: 0.88rem;
-      margin-bottom: 8px;
-    }
-
-    .info-box .value {
+    .profile-name {
+      font-size: 22px;
       font-weight: 700;
-      font-size: 1.05rem;
+      margin: 22px 0 4px;
     }
 
-    /* CATEGORY */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+    .profile-role {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      margin: 0;
     }
 
-    .card {
-      background: var(--panel);
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 25px;
+    }
+
+    .social-links a {
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      border-radius: 9px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: .2s;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
+    .social-links a:hover {
+      background: var(--accent);
+      color: #111;
       border-color: var(--accent);
     }
 
-    .card .icon {
-      font-size: 1.4rem;
+    .sidebar-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      color: var(--text);
+      padding: 7px 15px;
+      cursor: pointer;
+    }
+
+    /* MAIN AREA */
+    .main {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 18px 40px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .topbar nav {
+      display: flex;
+      gap: 23px;
+      flex-wrap: wrap;
+    }
+
+    .topbar nav a {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .topbar nav a:hover { color: var(--accent); }
+
+    .content {
+      width: min(1120px, 100%);
+      padding: 0 40px;
+      margin: auto;
+    }
+
+    section { scroll-margin-top: 90px; }
+
+    /* INTRO */
+    .intro {
+      padding: 95px 0 110px;
+      display: grid;
+      grid-template-columns: 1.4fr 0.85fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
       color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    .intro h1 {
+      margin: 0 0 24px;
+      font-size: clamp(44px, 5.8vw, 83px);
+      letter-spacing: -3px;
+      line-height: 1.06;
+    }
+
+    .accent { color: var(--accent); }
+
+    .intro-description {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 630px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 25px;
+    }
+
+    .chip {
+      padding: 6px 11px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .info-cards {
+      display: grid;
+      gap: 15px;
+    }
+
+    .info-card {
+      padding: 20px 23px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: var(--card);
+    }
+
+    .info-card small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 9px;
+    }
+
+    .info-card strong { font-size: 15px; }
+
+    /* SECTIONS */
+    .section {
+      padding: 55px 0 85px;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 13px;
       margin-bottom: 12px;
     }
 
-    .card h4 {
-      font-size: 1.15rem;
-      margin-bottom: 8px;
+    .section-title {
+      font-size: clamp(30px, 4vw, 42px);
+      line-height: 1.3;
+      margin: 0 0 13px;
+      letter-spacing: -1px;
     }
 
-    .card p {
+    .section-description {
       color: var(--muted);
-      font-size: 0.95rem;
+      margin: 0 0 35px;
+    }
+
+    /* CATEGORY CARDS */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .category-card {
+      min-height: 180px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      padding: 24px;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+    }
+
+    .category-icon {
+      color: var(--accent);
+      font-size: 25px;
+      margin-bottom: 15px;
+    }
+
+    .category-card h3 {
+      font-size: 17px;
+      margin: 0 0 9px;
+    }
+
+    .category-card p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    /* POST ARCHIVE */
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .archive-item {
+      scroll-margin-top: 100px;
+      padding: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .archive-item h3 {
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+
+    .archive-item p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .empty {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px;
     }
 
     /* ABOUT */
-    .about-box {
-      background: var(--panel);
+    .about-card {
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 28px;
+      padding: 32px;
     }
 
-    .about-box p {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
+    .about-card p { color: var(--muted); }
 
-    .link-btn {
+    .about-link {
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 12px;
       color: var(--accent);
       font-weight: 700;
     }
 
-    footer {
-      padding: 32px 0 50px;
-      color: #7d8797;
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
       text-align: center;
-      font-size: 0.92rem;
+      color: var(--muted);
+      font-size: 12px;
     }
 
-    @media (max-width: 900px) {
-      .intro-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .hero-arc {
-        width: 1100px;
-        height: 360px;
-      }
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .intro { grid-template-columns: 1fr; }
+      .info-cards { grid-template-columns: repeat(3, 1fr); }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+      .info-card { padding: 15px; }
     }
 
-    @media (max-width: 600px) {
-      .nav {
-        flex-direction: column;
-        gap: 14px;
+    @media (max-width: 760px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        padding: 30px 20px;
       }
 
-      nav {
-        justify-content: center;
-      }
+      .profile-photo { width: 110px; height: 130px; }
+      .profile-name { margin-top: 14px; }
+      .sidebar-bottom { margin-top: 28px; }
+      .main { margin-left: 0; }
+      .topbar { position: relative; padding: 17px 20px; }
+      .topbar nav { gap: 13px; }
+      .content { padding: 0 20px; }
+      .intro { padding: 65px 0; }
+      .info-cards { grid-template-columns: 1fr; }
+      .category-grid { grid-template-columns: 1fr; }
+      .archive-grid { grid-template-columns: 1fr; }
+      .section { padding: 40px 0 65px; }
+    }
 
-      .hero-inner {
-        padding: 70px 0 150px;
-      }
-
-      .card-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-arc {
-        width: 900px;
-        height: 260px;
-        bottom: -100px;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="container nav">
-      <a href="#home" class="logo">MANBOK<span>.LOG</span></a>
-      <nav>
+
+  <!-- LEFT PROFILE SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="profile-photo">
+      <span>M</span>
+      <img src="images/profile.jpg"
+           alt="Manbok 프로필 사진"
+           onerror="this.style.display='none'">
+    </div>
+
+    <h2 class="profile-name">Manbok</h2>
+    <p class="profile-role">Security Learner · Developer</p>
+
+    <div class="social-links">
+      <a href="https://github.com/Manbok-aly"
+         target="_blank"
+         rel="noopener noreferrer">GitHub ↗</a>
+      <a href="#about">About</a>
+    </div>
+
+    <div class="sidebar-bottom">
+      <span>© 2026 Manbok</span>
+      <button class="theme-toggle"
+              id="themeToggle"
+              type="button"
+              aria-pressed="false">☀ Light Mode</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <header class="topbar">
+      <a href="#home" class="logo">
+        MANBOK<span>.LOG</span>
+      </a>
+
+      <nav aria-label="메인 메뉴">
         <a href="#home">Home</a>
         <a href="#intro">Intro</a>
         <a href="#categories">Categories</a>
+        <a href="#posts">Posts</a>
         <a href="#about">About</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section class="hero" id="home">
-      <div class="container hero-inner">
-        <div class="hero-sub">2026 Security Portfolio</div>
-        <h1 class="hero-title">
-          보안을 중심으로<br>
-          배우고 기록하고 <span class="point">성장하다.</span>
-        </h1>
-        <p class="hero-desc">
-          정보보안 학습, 개발 프로젝트, CTF 풀이와 기술 정리를 기록하는
-          개인 블로그입니다.
-        </p>
-      </div>
-      <div class="hero-arc"></div>
-    </section>
+    <main class="content">
 
-    <section id="intro">
-      <div class="container">
-        <div class="section-label">// Portfolio</div>
-        <div class="intro-grid">
-          <div class="intro-main">
-            <h3>
-              Manbok's<br>
-              Security <span class="accent">Blog.</span>
-            </h3>
-            <p>
-              인증부터 배포까지 같은 개발 포트폴리오 문구 대신,
-              이 블로그는 정보보안 학습 과정과 프로젝트 기록을 중심으로 구성했습니다.
-              앞으로 CTF, Bug Bounty, 개발 실습, 논문/문서 정리를 꾸준히 아카이빙하는 용도로 사용할 수 있습니다.
-            </p>
-          </div>
+      <!-- INTRO -->
+      <section class="intro" id="home">
 
-          <div class="info-boxes">
-            <div class="info-box">
-              <div class="label">Role</div>
-              <div class="value">Security Learner / Developer</div>
-            </div>
-            <div class="info-box">
-              <div class="label">Focus</div>
-              <div class="value">CTF · Web Security · Development</div>
-            </div>
-            <div class="info-box">
-              <div class="label">Platform</div>
-              <div class="value">GitHub Pages</div>
-            </div>
+        <div id="intro">
+          <div class="eyebrow">// SECURITY PORTFOLIO</div>
+
+          <h1>
+            Manbok's<br>
+            Security<br>
+            <span class="accent">Blog.</span>
+          </h1>
+
+          <p class="intro-description">
+            정보보안 학습과 개발 프로젝트를 중심으로
+            CTF 문제 풀이, 취약점 분석, 논문 리뷰와
+            다양한 기술적 경험을 기록하는 개인 블로그입니다.
+          </p>
+
+          <div class="chips">
+            <span class="chip">Cybersecurity</span>
+            <span class="chip">CTF</span>
+            <span class="chip">Development</span>
+            <span class="chip">Research</span>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="categories">
-      <div class="container">
+        <div class="info-cards">
+          <div class="info-card">
+            <small>Role</small>
+            <strong>Security Learner / Developer</strong>
+          </div>
+          <div class="info-card">
+            <small>Focus</small>
+            <strong>CTF · Web Security · Development</strong>
+          </div>
+          <div class="info-card">
+            <small>Platform</small>
+            <strong>GitHub Pages</strong>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- CATEGORIES -->
+      <section class="section" id="categories">
         <div class="section-label">// Categories</div>
         <h2 class="section-title">기록할 분야들</h2>
-        <p class="section-desc">
-          미션에서 요구한 6개 카테고리를 기반으로 블로그 구조를 정리했습니다.
+        <p class="section-description">
+          학습 내용과 프로젝트 활동을 6개 분야로 분류합니다.
         </p>
 
-        <div class="card-grid">
-          <div class="card">
-            <div class="icon">⌘</div>
-            <h4>개발</h4>
-            <p>프로그래밍 학습, 개인 프로젝트, 구현 기록</p>
-          </div>
+        <div class="category-grid">
 
-          <div class="card">
-            <div class="icon">⚑</div>
-            <h4>CTF / Wargame</h4>
-            <p>문제 풀이 과정과 핵심 개념 정리</p>
-          </div>
+          <a href="#post-development" class="category-card">
+            <div class="category-icon">⌘</div>
+            <h3>개발</h3>
+            <p>프로그래밍, 프로젝트, 구현 기록</p>
+          </a>
 
-          <div class="card">
-            <div class="icon">◇</div>
-            <h4>Bug Bounty</h4>
-            <p>웹 취약점 분석 및 보안 연구 기록</p>
-          </div>
+          <a href="#post-ctf" class="category-card">
+            <div class="category-icon">⚑</div>
+            <h3>CTF / Wargame</h3>
+            <p>CTF 문제 풀이 및 Write-up</p>
+          </a>
 
-          <div class="card">
-            <div class="icon">▤</div>
-            <h4>블로그 / 기출문서</h4>
-            <p>학습 노트와 자료 정리</p>
-          </div>
+          <a href="#post-bugbounty" class="category-card">
+            <div class="category-icon">◇</div>
+            <h3>Bug Bounty</h3>
+            <p>취약점 분석 및 보안 연구 기록</p>
+          </a>
 
-          <div class="card">
-            <div class="icon">◈</div>
-            <h4>논문 / 컨퍼런스</h4>
-            <p>논문 리뷰, 세미나 및 컨퍼런스 메모</p>
-          </div>
+          <a href="#post-notes" class="category-card">
+            <div class="category-icon">▤</div>
+            <h3>블로그 / 기출문서</h3>
+            <p>학습 노트와 문서 아카이빙</p>
+          </a>
 
-          <div class="card">
-            <div class="icon">★</div>
-            <h4>공모전 / 자격증</h4>
-            <p>대회 준비 및 자격증 학습 기록</p>
-          </div>
+          <a href="#post-research" class="category-card">
+            <div class="category-icon">◈</div>
+            <h3>논문 / 컨퍼런스</h3>
+            <p>논문 리뷰와 기술 행사 기록</p>
+          </a>
+
+          <a href="#post-awards" class="category-card">
+            <div class="category-icon">★</div>
+            <h3>공모전 / 자격증</h3>
+            <p>대회와 자격증 학습 기록</p>
+          </a>
+
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="about">
-      <div class="container">
+      <!-- POSTS -->
+      <section class="section" id="posts">
+        <div class="section-label">// Archive</div>
+        <h2 class="section-title">Learning Archive</h2>
+        <p class="section-description">
+          각 분야의 게시글을 정리할 공간입니다.
+        </p>
+
+        <div class="archive-grid">
+
+          <article class="archive-item" id="post-development">
+            <h3>⌘ 개발</h3>
+            <p>Development & Projects</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+          <article class="archive-item" id="post-ctf">
+            <h3>⚑ CTF / Wargame</h3>
+            <p>Write-ups & Wargames</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+          <article class="archive-item" id="post-bugbounty">
+            <h3>◇ Bug Bounty</h3>
+            <p>Vulnerability Research</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+          <article class="archive-item" id="post-notes">
+            <h3>▤ 블로그 / 기출문서</h3>
+            <p>Study Notes & Documents</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+          <article class="archive-item" id="post-research">
+            <h3>◈ 논문 / 컨퍼런스</h3>
+            <p>Research & Conferences</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+          <article class="archive-item" id="post-awards">
+            <h3>★ 공모전 / 자격증</h3>
+            <p>Competitions & Certifications</p>
+            <div class="empty">아직 게시글이 없습니다.</div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="section" id="about">
         <div class="section-label">// About</div>
         <h2 class="section-title">About Me</h2>
-        <div class="about-box">
+
+        <div class="about-card">
+          <h3>Hello, I'm Manbok.</h3>
           <p>
-            안녕하세요. 정보보안과 개발을 학습하고 있으며,
-            이 블로그에는 학습 과정과 실습 결과를 정리해 나갈 예정입니다.
+            정보보안과 소프트웨어 개발을 학습하고 있으며,
+            이곳에 공부한 내용과 실습 과정을 기록합니다.
           </p>
           <p>
-            아직 게시글은 많지 않지만, 지속적으로 내용을 추가하면서
-            개인 포트폴리오이자 기술 아카이브로 발전시키는 것이 목표입니다.
+            개인 프로젝트와 CTF 풀이 등 다양한 활동을 정리하고
+            지속적으로 확장하는 기술 블로그를 목표로 합니다.
           </p>
-          <a class="link-btn" href="https://github.com/Manbok-aly" target="_blank" rel="noopener noreferrer">
-            GitHub Profile ↗
+          <a class="about-link"
+             href="https://github.com/Manbok-aly"
+             target="_blank"
+             rel="noopener noreferrer">
+             View GitHub Profile ↗
           </a>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <footer>
-    <div class="container">
-      © 2026 Manbok. Built with GitHub Pages.
-    </div>
-  </footer>
+    </main>
+
+    <footer class="footer">
+      © 2026 Manbok · Powered by GitHub Pages
+    </footer>
+
+  </div>
+
+  <!-- DARK / LIGHT MODE -->
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+
+    function applyTheme(theme) {
+      const isLight = theme === "light";
+      document.body.classList.toggle("light", isLight);
+      themeToggle.textContent = isLight
+        ? "☾ Dark Mode"
+        : "☀ Light Mode";
+      themeToggle.setAttribute("aria-pressed", String(isLight));
+    }
+
+    applyTheme(localStorage.getItem("manbok-theme") || "dark");
+
+    themeToggle.addEventListener("click", () => {
+      const nextTheme = document.body.classList.contains("light")
+        ? "dark"
+        : "light";
+      applyTheme(nextTheme);
+      localStorage.setItem("manbok-theme", nextTheme);
+    });
+  </script>
 </body>
 </html>
