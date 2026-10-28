@@ -7,354 +7,366 @@
   <meta name="description" content="Knights Frontier 3기 · 보안을 공부하는 학부생의 포트폴리오 블로그" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0a0e14;
-      --bg-soft: #0f141c;
-      --panel: #121926;
-      --panel-2: #161f2e;
-      --border: #1f2a3a;
-      --text: #d6e0ee;
-      --text-dim: #8ea0b8;
-      --accent: #39d98a;
-      --accent-2: #4fb6ff;
-      --danger: #ff5f6d;
-      --radius: 14px;
-      --sidebar-w: 320px;
-      --mono: 'JetBrains Mono', ui-monospace, monospace;
-      --sans: 'Noto Sans KR', system-ui, sans-serif;
+      /* VSCode Dark+ palette */
+      --editor: #1e1e1e;
+      --sidebar: #252526;
+      --activity: #333333;
+      --tabbar: #252526;
+      --tab-active: #1e1e1e;
+      --tab-inactive: #2d2d2d;
+      --statusbar: #007acc;
+      --panel-hdr: #252526;
+      --border: #3c3c3c;
+      --border-soft: #2b2b2b;
+
+      --text: #cccccc;
+      --text-dim: #858585;
+      --text-bright: #ffffff;
+
+      --accent: #0098ff;      /* focus / active */
+      --kw: #569cd6;          /* keyword blue */
+      --type: #4ec9b0;        /* type teal */
+      --str: #ce9178;         /* string orange */
+      --fn: #dcdcaa;          /* function yellow */
+      --num: #b5cea8;         /* number green */
+      --cmt: #6a9955;         /* comment green */
+      --purple: #c586c0;      /* control purple */
+
+      --radius: 6px;
+      --activity-w: 48px;
+      --sidebar-w: 300px;
+      --status-h: 24px;
+      --tab-h: 38px;
+      --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+      --ui: 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--bg);
+      background: var(--editor);
       color: var(--text);
-      font-family: var(--sans);
+      font-family: var(--ui);
+      font-size: 14px;
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      overflow: hidden;
     }
-
-    /* subtle grid backdrop */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(79,182,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(79,182,255,0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: -2;
-      pointer-events: none;
-    }
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(900px 500px at 70% -10%, rgba(57,217,138,0.10), transparent 60%),
-                  radial-gradient(700px 400px at 0% 100%, rgba(79,182,255,0.08), transparent 55%);
-      z-index: -1;
-      pointer-events: none;
-    }
-
     a { color: inherit; text-decoration: none; }
 
-    /* ======================================================
-       LAYOUT: fixed left sidebar + scrollable main content
-       ====================================================== */
-    .sidebar {
+    /* scrollbars, VSCode style */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-thumb { background: #424242; border: 3px solid transparent; background-clip: padding-box; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4f4f4f; background-clip: padding-box; }
+
+    /* =========================================================
+       ACTIVITY BAR (far-left icon strip)
+       ========================================================= */
+    .activitybar {
       position: fixed;
-      top: 0; left: 0;
-      width: var(--sidebar-w);
-      height: 100vh;
-      overflow-y: auto;
-      background: linear-gradient(180deg, var(--panel), var(--bg-soft));
-      border-right: 1px solid var(--border);
-      padding: 30px 24px;
+      top: 0; left: 0; bottom: var(--status-h);
+      width: var(--activity-w);
+      background: var(--activity);
       display: flex;
       flex-direction: column;
-      gap: 22px;
-      z-index: 40;
+      align-items: center;
+      z-index: 50;
     }
-    .sidebar::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 3px;
-      background: linear-gradient(180deg, var(--accent), var(--accent-2));
-    }
-    /* thin scrollbar for the sidebar */
-    .sidebar::-webkit-scrollbar { width: 6px; }
-    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-    main {
-      margin-left: var(--sidebar-w);
-      padding: 56px 48px 0;
-      max-width: 1100px;
-    }
-
-    /* ---------- Sidebar: brand ---------- */
-    .brand {
-      font-family: var(--mono);
-      font-weight: 700;
-      font-size: 0.98rem;
-      letter-spacing: 0.5px;
-    }
-    .brand .caret { color: var(--accent); }
-    .brand .tilde { color: var(--accent-2); }
-
-    /* ---------- Sidebar: profile ---------- */
-    .profile { text-align: center; }
-    .avatar {
-      width: 140px; height: 140px;
-      border-radius: 20px;
-      object-fit: cover;
-      border: 2px solid var(--border);
-      background: var(--panel-2);
-      display: block;
-      margin: 0 auto 16px;
-    }
-    .avatar-fallback {
-      width: 140px; height: 140px;
-      border-radius: 20px;
-      border: 2px solid var(--border);
-      background: linear-gradient(135deg, #15314b, #112036);
+    .activitybar .ico {
+      width: var(--activity-w);
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--mono);
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin: 0 auto 16px;
-    }
-    .profile h1 { font-size: 1.3rem; line-height: 1.3; }
-    .profile .role {
-      font-family: var(--mono);
-      color: var(--accent-2);
-      font-size: 0.8rem;
-      margin-top: 6px;
-    }
-    .profile .role .cursor {
-      display: inline-block;
-      width: 8px;
-      background: var(--accent);
-      margin-left: 2px;
-      animation: blink 1s steps(2) infinite;
-    }
-    @keyframes blink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
-    .profile p.bio {
-      color: var(--text-dim);
-      font-size: 0.84rem;
-      line-height: 1.65;
-      margin-top: 12px;
-      text-align: left;
-    }
-
-    .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
-    .badge {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      padding: 3px 9px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      color: var(--text-dim);
-      background: rgba(255,255,255,0.02);
-    }
-    .badge.on { color: var(--accent); border-color: rgba(57,217,138,0.4); }
-
-    /* ---------- Sidebar: nav ---------- */
-    .side-nav { display: flex; flex-direction: column; gap: 2px; }
-    .side-nav a {
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      padding: 9px 12px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: color .2s, background .2s;
-    }
-    .side-nav a:hover { color: var(--accent); background: rgba(57,217,138,0.08); }
-    .side-nav a .n { color: var(--accent-2); font-size: 0.72rem; opacity: .8; }
-
-    /* ---------- Sidebar: socials ---------- */
-    .socials { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 8px; }
-    .socials a {
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      color: var(--text-dim);
-      border: 1px solid var(--border);
-      padding: 6px 11px;
-      border-radius: 8px;
-      transition: all .2s;
-    }
-    .socials a:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-1px); }
-
-    .side-divider { height: 1px; background: var(--border); }
-
-    /* ---------- Section ---------- */
-    section.block { padding: 26px 0 40px; scroll-margin-top: 30px; }
-    section.block:first-child { padding-top: 0; }
-    .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 22px; }
-    .sec-head .idx { font-family: var(--mono); color: var(--accent); font-size: 0.9rem; }
-    .sec-head h2 { font-size: 1.5rem; }
-    .sec-head .sub { font-family: var(--mono); color: var(--text-dim); font-size: 0.8rem; margin-left: auto; }
-
-    /* ---------- Cards grid ---------- */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 16px; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      transition: transform .18s, border-color .18s, box-shadow .18s;
+      color: #858585;
+      cursor: pointer;
       position: relative;
+      border-left: 2px solid transparent;
     }
-    .card:hover { transform: translateY(-3px); border-color: rgba(79,182,255,0.4); box-shadow: 0 10px 30px -12px rgba(0,0,0,0.6); }
-    .card .tag {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--accent-2);
+    .activitybar .ico:hover { color: #e7e7e7; }
+    .activitybar .ico.active { color: #fff; border-left-color: #fff; }
+    .activitybar .ico svg { width: 24px; height: 24px; }
+    .activitybar .spacer { flex: 1; }
+
+    /* =========================================================
+       SIDEBAR (explorer: profile + file tree)
+       ========================================================= */
+    .sidebar {
+      position: fixed;
+      top: 0; bottom: var(--status-h);
+      left: var(--activity-w);
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      border-right: 1px solid var(--border-soft);
+      overflow-y: auto;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel-title {
+      font-size: 11px;
+      letter-spacing: .08em;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      color: #bbb;
+      padding: 10px 20px 6px;
+      font-weight: 400;
     }
-    .card h3 { font-size: 1.08rem; margin: 8px 0 8px; }
-    .card p { color: var(--text-dim); font-size: 0.9rem; }
-    .card .meta { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .card .meta span {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--text-dim);
+
+    /* profile panel */
+    .profile {
+      padding: 14px 18px 16px;
+      border-bottom: 1px solid var(--border-soft);
+      text-align: center;
+    }
+    .avatar, .avatar-fallback {
+      width: 120px; height: 120px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      padding: 2px 8px;
-      border-radius: 6px;
+      margin: 0 auto 12px;
+      display: block;
     }
-    .card .card-link {
-      display: inline-block;
-      margin-top: 14px;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--accent);
+    .avatar { object-fit: cover; background: #2d2d2d; }
+    .avatar-fallback {
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0e3a5f, #103a2e);
+      font-family: var(--mono); font-size: 2.6rem; font-weight: 700; color: var(--type);
     }
+    .profile h1 { font-size: 1.1rem; color: var(--text-bright); font-weight: 600; }
+    .profile .role { font-family: var(--mono); color: var(--accent); font-size: .72rem; margin-top: 4px; line-height: 1.5; }
+    .profile .role .cursor { display:inline-block; width:7px; background: var(--type); margin-left:1px; animation: blink 1s steps(2) infinite; }
+    @keyframes blink { 0%,50%{opacity:1} 50.01%,100%{opacity:0} }
+    .profile p.bio { color: var(--text-dim); font-size: .78rem; line-height: 1.6; margin-top: 10px; text-align: left; }
+    .badges { display:flex; gap:5px; flex-wrap:wrap; margin-top: 12px; justify-content:center; }
+    .badge {
+      font-family: var(--mono); font-size: .64rem; padding: 2px 8px;
+      border: 1px solid var(--border); border-radius: 999px; color: var(--text-dim);
+    }
+    .badge.on { color: var(--type); border-color: rgba(78,201,176,.5); }
+
+    /* file explorer tree */
+    .explorer { padding-bottom: 14px; }
+    .tree-root {
+      display:flex; align-items:center; gap:4px;
+      padding: 3px 16px; cursor: default; color: #cfcfcf;
+      font-size: 11px; letter-spacing: .07em; text-transform: uppercase; font-weight: 700;
+    }
+    .tree-root .chev { width: 16px; height: 16px; }
+    .file {
+      display:flex; align-items:center; gap:8px;
+      padding: 4px 16px 4px 34px;
+      font-size: .86rem; color: var(--text); cursor: pointer;
+      border-left: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .file:hover { background: #2a2d2e; }
+    .file.active { background: #37373d; border-left-color: var(--accent); color: #fff; }
+    .file .fi { width: 16px; height: 16px; flex: none; }
+    .file .fi.md { color: #519aba; }
+    .file .fi.dir { color: #c09553; }
+    .file .num { color: var(--text-dim); font-family: var(--mono); font-size: .72rem; margin-left: auto; }
+
+    .side-links { margin-top: auto; padding: 10px 16px 14px; border-top: 1px solid var(--border-soft); display:flex; gap:8px; flex-wrap:wrap; }
+    .side-links a {
+      font-family: var(--mono); font-size: .72rem; color: var(--text-dim);
+      border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px;
+    }
+    .side-links a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* =========================================================
+       EDITOR AREA (tabs + breadcrumb + content)
+       ========================================================= */
+    .editor {
+      margin-left: calc(var(--activity-w) + var(--sidebar-w));
+      height: calc(100vh - var(--status-h));
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* tab bar */
+    .tabbar {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: stretch;
+      height: var(--tab-h);
+      background: var(--tabbar);
+      border-bottom: 1px solid var(--border-soft);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabbar::-webkit-scrollbar { display: none; }
+    .tab {
+      display: flex; align-items: center; gap: 7px;
+      padding: 0 14px;
+      font-size: .82rem; color: var(--text-dim);
+      background: var(--tab-inactive);
+      border-right: 1px solid var(--border-soft);
+      cursor: pointer; white-space: nowrap; position: relative;
+    }
+    .tab .fi { width: 15px; height: 15px; color:#519aba; }
+    .tab.active { background: var(--tab-active); color: #fff; }
+    .tab.active::before { content:""; position:absolute; top:0; left:0; right:0; height:1px; background: var(--accent); }
+    .tab .dot { width:8px; height:8px; border-radius:50%; background: var(--text); opacity:0; }
+    .tab.active .dot { opacity:.9; }
+
+    /* breadcrumb */
+    .breadcrumb {
+      display:flex; align-items:center; gap:6px;
+      padding: 5px 20px; font-size: .78rem; color: var(--text-dim);
+      background: var(--editor); border-bottom: 1px solid var(--border-soft);
+      font-family: var(--mono); white-space: nowrap; overflow-x:auto; scrollbar-width:none;
+    }
+    .breadcrumb::-webkit-scrollbar { display:none; }
+    .breadcrumb .sep { opacity:.5; }
+    .breadcrumb .cur { color: var(--text); }
+
+    .content { padding: 10px 40px 80px; max-width: 1080px; }
+
+    /* =========================================================
+       SECTIONS
+       ========================================================= */
+    section.block { padding: 30px 0; scroll-margin-top: 20px; }
+    .sec-head { display:flex; align-items:baseline; gap:12px; margin-bottom: 20px; }
+    .sec-head .hash { font-family: var(--mono); color: var(--purple); font-size: 1.3rem; }
+    .sec-head h2 { font-size: 1.4rem; color: var(--text-bright); font-weight: 600; }
+    .sec-head .sub { font-family: var(--mono); color: var(--cmt); font-size: .8rem; margin-left:auto; }
+
+    /* cards */
+    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 14px; }
+    .card {
+      background: var(--sidebar); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+      transition: border-color .15s, transform .15s;
+    }
+    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card .tag { font-family: var(--mono); font-size: .68rem; color: var(--str); text-transform: uppercase; letter-spacing: .08em; }
+    .card h3 { font-size: 1.02rem; color: var(--text-bright); margin: 7px 0; font-weight: 600; }
+    .card p { color: var(--text-dim); font-size: .88rem; }
+    .card .meta { margin-top: 12px; display:flex; gap:6px; flex-wrap:wrap; }
+    .card .meta span { font-family: var(--mono); font-size: .7rem; color: var(--num); border:1px solid var(--border); padding:1px 7px; border-radius:4px; }
+    .card .card-link { display:inline-block; margin-top: 12px; font-family: var(--mono); font-size: .78rem; color: var(--accent); }
     .card .card-link:hover { text-decoration: underline; }
 
-    /* placeholder / empty note */
     .empty {
-      font-family: var(--mono);
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 18px 20px;
-      background: rgba(255,255,255,0.015);
+      font-family: var(--mono); font-size: .82rem; color: var(--text-dim);
+      border: 1px dashed var(--border); border-radius: var(--radius);
+      padding: 16px 18px; background: rgba(255,255,255,.015); line-height: 1.8;
     }
-    .empty .c { color: var(--accent); }
+    .empty .c { color: var(--cmt); }
 
-    /* ---------- About terminal ---------- */
-    .terminal {
-      background: #0b1017;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      font-family: var(--mono);
-      font-size: 0.88rem;
+    /* about: rendered like a code editor with line numbers */
+    .code {
+      background: var(--editor); border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; font-family: var(--mono); font-size: .86rem;
     }
-    .term-bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: var(--panel-2); border-bottom: 1px solid var(--border); }
-    .term-bar .dot { width: 11px; height: 11px; border-radius: 50%; }
-    .dot.r { background: #ff5f56; } .dot.y { background: #ffbd2e; } .dot.g { background: #27c93f; }
-    .term-bar .title { margin-left: 8px; color: var(--text-dim); font-size: 0.78rem; }
-    .term-body { padding: 18px; line-height: 1.9; }
-    .term-body .pr { color: var(--accent); }
-    .term-body .cm { color: var(--text-dim); }
-    .term-body .out { color: var(--text); }
-    .term-body .key { color: var(--accent-2); }
+    .code-head { display:flex; align-items:center; gap:7px; padding: 8px 14px; background: var(--sidebar); border-bottom: 1px solid var(--border); }
+    .code-head .fi { width:15px; height:15px; color:#519aba; }
+    .code-head .name { color: var(--text); font-size: .8rem; }
+    .code-body { display:flex; }
+    .gutter { padding: 14px 0; text-align:right; color:#6e7681; user-select:none; min-width: 42px; }
+    .gutter span { display:block; padding: 0 12px; line-height: 1.9; }
+    .code-lines { padding: 14px 0; overflow-x:auto; flex:1; }
+    .code-lines .ln { padding: 0 16px; line-height: 1.9; white-space: pre; }
+    .code-lines .kw { color: var(--kw); }
+    .code-lines .h { color: var(--fn); font-weight: 700; }
+    .code-lines .str { color: var(--str); }
+    .code-lines .cmt { color: var(--cmt); }
+    .code-lines .list { color: var(--text); }
+    .code-lines .bullet { color: var(--type); }
 
-    /* ---------- Footer ---------- */
-    footer {
-      border-top: 1px solid var(--border);
-      margin-top: 20px;
-      padding: 28px 0;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--text-dim);
+    /* footer inside editor */
+    footer { border-top: 1px solid var(--border-soft); margin-top: 24px; padding: 22px 0; color: var(--text-dim); font-family: var(--mono); font-size: .78rem; }
+    footer .hb { color: #f48771; }
+
+    /* =========================================================
+       STATUS BAR (bottom blue bar)
+       ========================================================= */
+    .statusbar {
+      position: fixed; left: 0; right: 0; bottom: 0; height: var(--status-h);
+      background: var(--statusbar); color: #fff;
+      display: flex; align-items: center;
+      font-family: var(--mono); font-size: .72rem;
+      z-index: 60; padding: 0 2px;
     }
-    footer .hb { color: var(--danger); }
+    .statusbar .si { display:flex; align-items:center; gap:5px; padding: 0 9px; height:100%; }
+    .statusbar .si:hover { background: rgba(255,255,255,.12); }
+    .statusbar .si svg { width: 13px; height: 13px; }
+    .statusbar .spacer { flex: 1; }
 
-    /* ---------- Mobile top bar (hidden on desktop) ---------- */
-    .topbar {
-      display: none;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-      padding: 0 18px;
-      background: rgba(10,14,20,0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-toggle { background: none; border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 11px; font-size: 1.1rem; cursor: pointer; }
-    .backdrop { display: none; }
-
-    /* ======================================================
-       RESPONSIVE: sidebar slides in as a drawer on mobile
-       ====================================================== */
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+    .topbar { display:none; }
+    .nav-toggle { background:none; border:1px solid #555; color:#ddd; border-radius:5px; padding:4px 10px; font-size:1rem; cursor:pointer; }
+    .backdrop { display:none; }
     @media (max-width: 900px) {
-      .topbar { display: flex; }
-      .sidebar {
-        transform: translateX(-100%);
-        transition: transform .25s ease;
-        box-shadow: 0 0 40px rgba(0,0,0,0.5);
+      body { overflow: auto; }
+      .activitybar { bottom: var(--status-h); }
+      .topbar {
+        display:flex; align-items:center; justify-content:space-between;
+        position: sticky; top:0; z-index:55; height: 44px; padding: 0 12px 0 60px;
+        background: var(--tabbar); border-bottom: 1px solid var(--border-soft);
       }
+      .topbar .title { font-family: var(--mono); font-size: .82rem; color: var(--text); }
+      .sidebar { transform: translateX(-120%); transition: transform .22s ease; top:0; bottom:0; box-shadow: 0 0 40px rgba(0,0,0,.6); }
       .sidebar.open { transform: translateX(0); }
-      main { margin-left: 0; padding: 28px 20px 0; }
-      .backdrop.show {
-        display: block;
-        position: fixed; inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 35;
-      }
-      .sec-head .sub { display: none; }
+      .editor { margin-left: 0; height: auto; overflow: visible; }
+      .backdrop.show { display:block; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:38; }
+      .content { padding: 6px 18px 80px; }
+      .sec-head .sub { display:none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ================= MOBILE TOP BAR ================= -->
+  <!-- ===================== ACTIVITY BAR ===================== -->
+  <nav class="activitybar">
+    <div class="ico active" title="Explorer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+    </div>
+    <div class="ico" title="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </div>
+    <div class="ico" title="Source Control">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M18 11.5c0 3-3 3.5-6 3.5"/></svg>
+    </div>
+    <div class="ico" title="Run and Debug">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <div class="ico" title="Extensions">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg>
+    </div>
+    <div class="spacer"></div>
+    <a class="ico" href="https://github.com/Manbok-aly" target="_blank" rel="noopener" title="GitHub Account">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+    </a>
+    <div class="ico" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 0 1-4 0v-.2A1.6 1.6 0 0 0 7 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H1a2 2 0 0 1 0-4h.2A1.6 1.6 0 0 0 2.6 7a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 7 2.6h.1A1.6 1.6 0 0 0 8 1.1V1a2 2 0 0 1 4 0v.2A1.6 1.6 0 0 0 13 2.6a1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V7a1.6 1.6 0 0 0 1.5 1h.2a2 2 0 0 1 0 4h-.2a1.6 1.6 0 0 0-1.4 1z"/></svg>
+    </div>
+  </nav>
+
+  <!-- ===================== MOBILE TOP BAR ===================== -->
   <div class="topbar">
-    <a href="#top" class="brand"><span class="caret">root@</span>manbok<span class="tilde">:~$</span></a>
-    <button class="nav-toggle" aria-label="menu" onclick="toggleSidebar()">≡</button>
+    <button class="nav-toggle" aria-label="menu" onclick="toggleSidebar()">☰</button>
+    <span class="title">portfolio — manbok-aly</span>
+    <span style="width:40px"></span>
   </div>
   <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
 
-  <!-- ================= FIXED LEFT SIDEBAR ================= -->
+  <!-- ===================== SIDEBAR / EXPLORER ===================== -->
   <aside class="sidebar" id="sidebar">
-    <a href="#top" class="brand"><span class="caret">root@</span>manbok<span class="tilde">:~$</span></a>
-
     <div class="profile" id="top">
       <!--
         프로필 사진: 저장소 루트의 profile.png 를 사용합니다.
         파일이 없거나 이름이 다르면 이니셜(M)이 대신 표시됩니다.
       -->
-      <img
-        class="avatar"
-        src="profile.png"
-        alt="프로필 사진"
-        onerror="this.outerHTML='<div class=&quot;avatar-fallback&quot;>M</div>'" />
-      <h1><span style="color:var(--accent)">Manbok</span></h1>
+      <img class="avatar" src="profile.png" alt="프로필 사진"
+           onerror="this.outerHTML='<div class=&quot;avatar-fallback&quot;>M</div>'" />
+      <h1>Manbok</h1>
       <p class="role">// Security Learner<br />Knights Frontier 3기<span class="cursor">&nbsp;</span></p>
-      <p class="bio">
-        정보보안에 빠진 학부 3학년. 취약점을 찾고, 익스플로잇을 작성하고,
-        배운 것을 기록으로 남깁니다.
-      </p>
+      <p class="bio">정보보안에 빠진 학부 3학년. 취약점을 찾고, 익스플로잇을 작성하고, 배운 것을 기록으로 남깁니다.</p>
       <div class="badges">
         <span class="badge">Web</span>
         <span class="badge on">Reversing</span>
@@ -364,187 +376,252 @@
       </div>
     </div>
 
-    <div class="side-divider"></div>
+    <div class="panel-title">Explorer</div>
+    <div class="explorer">
+      <div class="tree-root">
+        <svg class="chev" viewBox="0 0 16 16" fill="currentColor"><path d="M6 4l4 4-4 4z"/></svg>
+        MANBOK-ALY
+      </div>
+      <a class="file" data-sec="about" href="#about">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        00_about.md <span class="num">00</span>
+      </a>
+      <a class="file" data-sec="dev" href="#dev">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        01_dev.md <span class="num">01</span>
+      </a>
+      <a class="file" data-sec="ctf" href="#ctf">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        02_ctf_wargame.md <span class="num">02</span>
+      </a>
+      <a class="file" data-sec="bugbounty" href="#bugbounty">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        03_bug_bounty.md <span class="num">03</span>
+      </a>
+      <a class="file" data-sec="blog" href="#blog">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        04_blog.md <span class="num">04</span>
+      </a>
+      <a class="file" data-sec="papers" href="#papers">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        05_papers.md <span class="num">05</span>
+      </a>
+      <a class="file" data-sec="awards" href="#awards">
+        <svg class="fi md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+        06_awards.md <span class="num">06</span>
+      </a>
+    </div>
 
-    <nav class="side-nav">
-      <a href="#about"><span class="n">00</span> About Me</a>
-      <a href="#dev"><span class="n">01</span> 개발</a>
-      <a href="#ctf"><span class="n">02</span> CTF / Wargame</a>
-      <a href="#bugbounty"><span class="n">03</span> Bug Bounty</a>
-      <a href="#blog"><span class="n">04</span> 블로그 / 기술문서</a>
-      <a href="#papers"><span class="n">05</span> 논문 / 컨퍼런스</a>
-      <a href="#awards"><span class="n">06</span> 공모전 / 자격증</a>
-    </nav>
-
-    <div class="socials">
+    <div class="side-links">
       <a href="https://github.com/Manbok-aly" target="_blank" rel="noopener">GitHub ↗</a>
       <a href="mailto:namu1825@naver.com">Email ↗</a>
     </div>
   </aside>
 
-  <!-- ================= MAIN CONTENT ================= -->
-  <main>
-    <!-- ================= ABOUT ================= -->
-    <section class="block" id="about">
-      <div class="sec-head">
-        <span class="idx">00.</span>
-        <h2>About Me</h2>
-        <span class="sub">~ /whoami</span>
-      </div>
-      <div class="terminal">
-        <div class="term-bar">
-          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-          <span class="title">manbok@knights-frontier: ~</span>
-        </div>
-        <div class="term-body">
-          <div><span class="pr">$</span> whoami</div>
-          <div class="out">manbok — 정보보안 전공 학부 3학년</div>
-          <div><span class="pr">$</span> cat interests.txt</div>
-          <div class="out"><span class="key">[+]</span> 웹/시스템 취약점 분석, CTF, 버그바운티</div>
-          <div class="out"><span class="key">[+]</span> 공격을 이해하고 방어로 연결하기</div>
-          <div><span class="pr">$</span> cat goals.md <span class="cm"># 2026</span></div>
-          <div class="out"><span class="key">[*]</span> CTF 본선 진출 · 첫 버그바운티 리포트 제출</div>
-          <div class="out"><span class="key">[*]</span> 기술 블로그 꾸준히 작성 · 자격증 취득</div>
-          <div><span class="pr">$</span> <span class="cm">_</span></div>
-        </div>
-      </div>
-    </section>
+  <!-- ===================== EDITOR ===================== -->
+  <div class="editor" id="editor">
+    <!-- tab bar -->
+    <div class="tabbar" id="tabbar">
+      <div class="tab active" data-sec="about"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>00_about.md<span class="dot"></span></div>
+      <div class="tab" data-sec="dev"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>01_dev.md<span class="dot"></span></div>
+      <div class="tab" data-sec="ctf"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>02_ctf_wargame.md<span class="dot"></span></div>
+      <div class="tab" data-sec="bugbounty"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>03_bug_bounty.md<span class="dot"></span></div>
+      <div class="tab" data-sec="blog"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>04_blog.md<span class="dot"></span></div>
+      <div class="tab" data-sec="papers"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>05_papers.md<span class="dot"></span></div>
+      <div class="tab" data-sec="awards"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>06_awards.md<span class="dot"></span></div>
+    </div>
 
-    <!-- ================= 1. 개발 ================= -->
-    <section class="block" id="dev">
-      <div class="sec-head">
-        <span class="idx">01.</span>
-        <h2>개발 · Development</h2>
-        <span class="sub">~ /projects</span>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Project</span>
-          <h3>프로젝트 제목</h3>
-          <p>프로젝트에 대한 간단한 설명을 적어주세요. 어떤 문제를 풀었고 무엇을 배웠는지.</p>
-          <div class="meta"><span>Python</span><span>Flask</span><span>2026</span></div>
-          <a class="card-link" href="#" target="_blank">자세히 보기 →</a>
-        </article>
-        <div class="empty">
-          <span class="c">#</span> TODO: 여기에 개발 프로젝트 카드를 추가하세요.<br />
-          <span class="c">#</span> card 블록을 복사해 제목 · 설명 · 링크만 바꾸면 됩니다.
-        </div>
-      </div>
-    </section>
+    <!-- breadcrumb -->
+    <div class="breadcrumb">
+      manbok-aly <span class="sep">›</span> <span class="cur" id="crumb">00_about.md</span>
+    </div>
 
-    <!-- ================= 2. CTF / Wargame ================= -->
-    <section class="block" id="ctf">
-      <div class="sec-head">
-        <span class="idx">02.</span>
-        <h2>CTF / Wargame</h2>
-        <span class="sub">~ /writeups</span>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Writeup</span>
-          <h3>대회명 — 문제 이름</h3>
-          <p>풀이 과정 요약. 어떤 취약점이었고 어떻게 접근했는지 핵심만.</p>
-          <div class="meta"><span>Web</span><span>Pwn</span><span>500pts</span></div>
-          <a class="card-link" href="#" target="_blank">Write-up 읽기 →</a>
-        </article>
-        <div class="empty">
-          <span class="c">#</span> TODO: CTF 라이트업 / 워게임 풀이를 추가하세요.<br />
-          <span class="c">#</span> 예: Dreamhack, HackCTF, pwnable.kr, Root-Me ...
+    <div class="content">
+      <!-- ===== 00. ABOUT ===== -->
+      <section class="block" id="about">
+        <div class="sec-head"><span class="hash">#</span><h2>About Me</h2><span class="sub">// 00_about.md</span></div>
+        <div class="code">
+          <div class="code-head">
+            <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9z"/><path d="M13 3v6h6"/></svg>
+            <span class="name">about.md</span>
+          </div>
+          <div class="code-body">
+            <div class="gutter"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+            <div class="code-lines">
+              <div class="ln"><span class="h"># Manbok</span></div>
+              <div class="ln"> </div>
+              <div class="ln"><span class="cmt">&gt; 정보보안 전공 학부 3학년 · Knights Frontier 3기</span></div>
+              <div class="ln"> </div>
+              <div class="ln"><span class="h">## interests</span></div>
+              <div class="ln"><span class="bullet">-</span> <span class="list">웹/시스템 취약점 분석, CTF, 버그바운티</span></div>
+              <div class="ln"><span class="bullet">-</span> <span class="list">공격을 이해하고 방어로 연결하기</span></div>
+              <div class="ln"><span class="h">## goals</span> <span class="cmt">// 2026</span></div>
+              <div class="ln"><span class="bullet">-</span> <span class="list">CTF 본선 진출 · 첫 버그바운티 리포트 · 자격증 취득</span></div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= 3. Bug Bounty ================= -->
-    <section class="block" id="bugbounty">
-      <div class="sec-head">
-        <span class="idx">03.</span>
-        <h2>Bug Bounty</h2>
-        <span class="sub">~ /reports</span>
-      </div>
-      <div class="grid">
-        <div class="empty">
-          <span class="c">#</span> TODO: 제보한 취약점 / 버그바운티 활동을 기록하세요.<br />
-          <span class="c">#</span> 책임 있는 공개(Responsible Disclosure) 원칙을 지켜 작성하세요.<br />
-          <span class="c">#</span> 예: 대상 · 취약점 유형(XSS, IDOR ...) · 처리 상태 · 보상 여부
+      <!-- ===== 01. 개발 ===== -->
+      <section class="block" id="dev">
+        <div class="sec-head"><span class="hash">#</span><h2>개발 · Development</h2><span class="sub">// 01_dev.md</span></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Project</span>
+            <h3>프로젝트 제목</h3>
+            <p>프로젝트에 대한 간단한 설명을 적어주세요. 어떤 문제를 풀었고 무엇을 배웠는지.</p>
+            <div class="meta"><span>Python</span><span>Flask</span><span>2026</span></div>
+            <a class="card-link" href="#" target="_blank">자세히 보기 →</a>
+          </article>
+          <div class="empty">
+            <span class="c">#</span> TODO: 여기에 개발 프로젝트 카드를 추가하세요.<br />
+            <span class="c">#</span> card 블록을 복사해 제목 · 설명 · 링크만 바꾸면 됩니다.
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= 4. 블로그 / 기술문서 ================= -->
-    <section class="block" id="blog">
-      <div class="sec-head">
-        <span class="idx">04.</span>
-        <h2>블로그 · 기술문서</h2>
-        <span class="sub">~ /posts</span>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Post</span>
-          <h3>기술 글 제목</h3>
-          <p>공부하면서 정리한 내용, 삽질 기록, 개념 정리 등을 링크로 연결하세요.</p>
-          <div class="meta"><span>Web Security</span><span>2026</span></div>
-          <a class="card-link" href="#" target="_blank">글 읽기 →</a>
-        </article>
-        <div class="empty">
-          <span class="c">#</span> TODO: 기술 블로그 글 / 정리 문서를 추가하세요.
+      <!-- ===== 02. CTF / Wargame ===== -->
+      <section class="block" id="ctf">
+        <div class="sec-head"><span class="hash">#</span><h2>CTF / Wargame</h2><span class="sub">// 02_ctf_wargame.md</span></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Writeup</span>
+            <h3>대회명 — 문제 이름</h3>
+            <p>풀이 과정 요약. 어떤 취약점이었고 어떻게 접근했는지 핵심만.</p>
+            <div class="meta"><span>Web</span><span>Pwn</span><span>500pts</span></div>
+            <a class="card-link" href="#" target="_blank">Write-up 읽기 →</a>
+          </article>
+          <div class="empty">
+            <span class="c">#</span> TODO: CTF 라이트업 / 워게임 풀이를 추가하세요.<br />
+            <span class="c">#</span> 예: Dreamhack, HackCTF, pwnable.kr, Root-Me ...
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= 5. 논문 / 컨퍼런스 ================= -->
-    <section class="block" id="papers">
-      <div class="sec-head">
-        <span class="idx">05.</span>
-        <h2>논문 · 컨퍼런스</h2>
-        <span class="sub">~ /research</span>
-      </div>
-      <div class="grid">
-        <div class="empty">
-          <span class="c">#</span> TODO: 읽은 논문 리뷰, 참석한 컨퍼런스(POC, CODEGATE, 데프콘 ...) 후기를 남기세요.<br />
-          <span class="c">#</span> 예: 제목 · 저자/행사 · 핵심 요약 · 느낀 점
+      <!-- ===== 03. Bug Bounty ===== -->
+      <section class="block" id="bugbounty">
+        <div class="sec-head"><span class="hash">#</span><h2>Bug Bounty</h2><span class="sub">// 03_bug_bounty.md</span></div>
+        <div class="grid">
+          <div class="empty">
+            <span class="c">#</span> TODO: 제보한 취약점 / 버그바운티 활동을 기록하세요.<br />
+            <span class="c">#</span> 책임 있는 공개(Responsible Disclosure) 원칙을 지켜 작성하세요.<br />
+            <span class="c">#</span> 예: 대상 · 취약점 유형(XSS, IDOR ...) · 처리 상태 · 보상 여부
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= 6. 공모전 / 자격증 ================= -->
-    <section class="block" id="awards">
-      <div class="sec-head">
-        <span class="idx">06.</span>
-        <h2>공모전 · 자격증</h2>
-        <span class="sub">~ /certs</span>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <span class="tag">Cert</span>
-          <h3>자격증 / 수상 이름</h3>
-          <p>취득한 자격증이나 공모전 수상 내역을 적어주세요.</p>
-          <div class="meta"><span>2026</span><span>발급기관</span></div>
-        </article>
-        <div class="empty">
-          <span class="c">#</span> TODO: 공모전 참가/수상, 자격증(정보보안기사, CPPG ...)을 추가하세요.
+      <!-- ===== 04. 블로그 / 기술문서 ===== -->
+      <section class="block" id="blog">
+        <div class="sec-head"><span class="hash">#</span><h2>블로그 · 기술문서</h2><span class="sub">// 04_blog.md</span></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Post</span>
+            <h3>기술 글 제목</h3>
+            <p>공부하면서 정리한 내용, 삽질 기록, 개념 정리 등을 링크로 연결하세요.</p>
+            <div class="meta"><span>Web Security</span><span>2026</span></div>
+            <a class="card-link" href="#" target="_blank">글 읽기 →</a>
+          </article>
+          <div class="empty">
+            <span class="c">#</span> TODO: 기술 블로그 글 / 정리 문서를 추가하세요.
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ================= FOOTER ================= -->
-    <footer>
-      <div>© 2026 Manbok · Knights Frontier 3기</div>
-      <div style="margin-top:6px">Built with <span class="hb">&lt;3</span> and a little bit of <span style="color:var(--accent)">HTML</span> · Hosted on GitHub Pages</div>
-    </footer>
-  </main>
+      <!-- ===== 05. 논문 / 컨퍼런스 ===== -->
+      <section class="block" id="papers">
+        <div class="sec-head"><span class="hash">#</span><h2>논문 · 컨퍼런스</h2><span class="sub">// 05_papers.md</span></div>
+        <div class="grid">
+          <div class="empty">
+            <span class="c">#</span> TODO: 읽은 논문 리뷰, 참석한 컨퍼런스(POC, CODEGATE, 데프콘 ...) 후기를 남기세요.<br />
+            <span class="c">#</span> 예: 제목 · 저자/행사 · 핵심 요약 · 느낀 점
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 06. 공모전 / 자격증 ===== -->
+      <section class="block" id="awards">
+        <div class="sec-head"><span class="hash">#</span><h2>공모전 · 자격증</h2><span class="sub">// 06_awards.md</span></div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Cert</span>
+            <h3>자격증 / 수상 이름</h3>
+            <p>취득한 자격증이나 공모전 수상 내역을 적어주세요.</p>
+            <div class="meta"><span>2026</span><span>발급기관</span></div>
+          </article>
+          <div class="empty">
+            <span class="c">#</span> TODO: 공모전 참가/수상, 자격증(정보보안기사, CPPG ...)을 추가하세요.
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div>© 2026 Manbok · Knights Frontier 3기</div>
+        <div style="margin-top:6px">Built with <span class="hb">&lt;3</span> and a little bit of <span style="color:var(--type)">HTML</span> · Hosted on GitHub Pages</div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ===================== STATUS BAR ===================== -->
+  <footer class="statusbar">
+    <a class="si" href="https://github.com/Manbok-aly" target="_blank" rel="noopener" title="branch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M18 11.5c0 3-3 3.5-6 3.5"/></svg>
+      main
+    </a>
+    <span class="si" title="no problems">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>
+      0 &nbsp;⚠ 0
+    </span>
+    <div class="spacer"></div>
+    <span class="si">Knights Frontier 3기</span>
+    <span class="si">UTF-8</span>
+    <span class="si">LF</span>
+    <span class="si">Markdown</span>
+    <span class="si">🙂</span>
+  </footer>
 
   <script>
-    // 모바일: 사이드바 열고 닫기
+    // 모바일: 사이드바 토글
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
       document.getElementById('backdrop').classList.toggle('show');
     }
-    // 모바일에서 메뉴 링크 클릭 시 사이드바 닫기
-    document.querySelectorAll('.side-nav a, .profile a').forEach(function (a) {
-      a.addEventListener('click', function () {
-        if (window.innerWidth <= 900) toggleSidebar();
+    document.querySelectorAll('.file, .tab').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var sec = el.getAttribute('data-sec');
+        if (sec) {
+          var target = document.getElementById(sec);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (window.innerWidth <= 900 && el.classList.contains('file')) toggleSidebar();
       });
     });
+
+    // 스크롤 스파이: 현재 보이는 섹션의 파일/탭을 활성화하고 breadcrumb 갱신
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section.block'));
+    var crumb = document.getElementById('crumb');
+    var scroller = window.innerWidth <= 900 ? window : document.getElementById('editor');
+    var nameMap = {
+      about: '00_about.md', dev: '01_dev.md', ctf: '02_ctf_wargame.md',
+      bugbounty: '03_bug_bounty.md', blog: '04_blog.md', papers: '05_papers.md', awards: '06_awards.md'
+    };
+
+    function setActive(id) {
+      document.querySelectorAll('[data-sec]').forEach(function (el) {
+        el.classList.toggle('active', el.getAttribute('data-sec') === id);
+      });
+      if (nameMap[id]) crumb.textContent = nameMap[id];
+      // 활성 탭이 보이도록 가로 스크롤
+      var activeTab = document.querySelector('.tab.active');
+      if (activeTab) activeTab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) setActive(e.target.id);
+      });
+    }, { root: window.innerWidth <= 900 ? null : document.getElementById('editor'), rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(function (s) { io.observe(s); });
   </script>
 </body>
 </html>
