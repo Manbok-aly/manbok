@@ -209,8 +209,9 @@
     .empty .t span { font-family: var(--mono); font-size: .82rem; }
 
     /* ===================== ABOUT ===================== */
-    .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
-    .about-text p { color: var(--text-mid); font-size: 1rem; }
+    .about-grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: start; }
+    .about-text { max-width: 68ch; }
+    .about-text p { color: var(--text-mid); font-size: 1.05rem; }
     .about-text p + p { margin-top: 16px; }
     .about-text .hl { color: var(--text); font-weight: 600; }
     .skills { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
@@ -383,14 +384,6 @@
             이 포트폴리오는 <span class="hl">개발 · CTF · 버그바운티 · 기술문서 · 논문 · 공모전</span>의
             여섯 갈래로 제 성장 기록을 모아두는 공간입니다. 아래에서 각 활동을 확인해 주세요.
           </p>
-        </div>
-        <div class="skills reveal">
-          <h4>Focus Areas</h4>
-          <div class="skill-row"><div class="top"><span>Web Hacking</span><span class="lvl">학습 중</span></div><div class="bar"><i data-w="60%"></i></div></div>
-          <div class="skill-row"><div class="top"><span>Reversing</span><span class="lvl">집중</span></div><div class="bar"><i data-w="72%"></i></div></div>
-          <div class="skill-row"><div class="top"><span>Pwnable</span><span class="lvl">집중</span></div><div class="bar"><i data-w="68%"></i></div></div>
-          <div class="skill-row"><div class="top"><span>Cryptography</span><span class="lvl">기초</span></div><div class="bar"><i data-w="45%"></i></div></div>
-          <div class="skill-row"><div class="top"><span>Development</span><span class="lvl">도구 제작</span></div><div class="bar"><i data-w="58%"></i></div></div>
         </div>
       </div>
     </section>
