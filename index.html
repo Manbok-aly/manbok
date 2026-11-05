@@ -274,6 +274,7 @@
       * { scroll-behavior: auto; }
     }
   </style>
+  <link rel="stylesheet" href="posts.css" />
 </head>
 <body>
 
@@ -290,6 +291,7 @@
         <a href="#blog">기술문서</a>
         <a href="#papers">논문</a>
         <a href="#awards">공모전</a>
+        <button type="button" class="btn btn-ghost post-write" data-write="blog" disabled>글쓰기</button>
         <a href="#contact" class="nav-cta">Contact</a>
       </nav>
     </div>
@@ -515,6 +517,60 @@
     </section>
   </main>
 
+  <div class="wrap storage-notice">
+    <p>작성한 글과 사진은 이 브라우저에만 저장됩니다. 다른 기기나 방문자에게 공유되지 않으며, 브라우저 데이터를 삭제하면 사라집니다.</p>
+    <p id="post-status" role="status" aria-live="polite">게시물을 불러오는 중입니다.</p>
+  </div>
+
+  <dialog id="post-editor" class="post-dialog" aria-labelledby="editor-title">
+    <form id="post-form">
+      <div class="dialog-heading">
+        <h2 id="editor-title">새 글 작성</h2>
+        <button type="button" class="icon-button" id="editor-close" aria-label="글쓰기 닫기">✕</button>
+      </div>
+      <p class="editor-note">배운 내용과 활동 사진을 기록해 보세요. 이 브라우저에만 저장됩니다.</p>
+      <fieldset id="editor-fields">
+        <label for="post-category">카테고리</label>
+        <select id="post-category" required>
+          <option value="dev">개발</option>
+          <option value="ctf">CTF / Wargame</option>
+          <option value="bugbounty">Bug Bounty</option>
+          <option value="blog" selected>블로그 · 기술문서</option>
+          <option value="papers">논문 · 컨퍼런스</option>
+          <option value="awards">공모전 · 자격증</option>
+        </select>
+        <label for="post-title">제목 <span class="field-hint">필수 · 최대 120자</span></label>
+        <input id="post-title" type="text" maxlength="120" required placeholder="어떤 이야기를 남기고 싶나요?" />
+        <label for="post-body">내용 <span class="field-hint">최대 20,000자</span></label>
+        <textarea id="post-body" rows="9" maxlength="20000" placeholder="공부한 내용, 문제 풀이, 활동 후기를 자유롭게 작성하세요."></textarea>
+        <label for="post-images">사진 첨부 <span id="image-count" class="field-hint">0 / 6장</span></label>
+        <input id="post-images" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple aria-describedby="image-help" />
+        <p id="image-help" class="field-hint">JPG, PNG, WebP, GIF · 최대 6장 · 장당 5MB, 합계 20MB까지. 내용이나 사진을 하나 이상 추가해 주세요.</p>
+        <ul id="image-previews" class="image-previews" aria-label="첨부 사진 미리보기"></ul>
+      </fieldset>
+      <p id="editor-message" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" id="editor-cancel" class="btn btn-ghost">취소</button>
+        <button type="submit" id="post-submit" class="btn btn-primary">게시하기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="post-reader" class="post-dialog" aria-labelledby="reader-title">
+    <div class="dialog-heading">
+      <span id="reader-category" class="post-category"></span>
+      <button type="button" id="reader-close" class="icon-button" aria-label="게시물 닫기">✕</button>
+    </div>
+    <h2 id="reader-title" class="reader-title"></h2>
+    <p id="reader-date" class="field-hint"></p>
+    <p id="reader-body" class="reader-body"></p>
+    <div id="reader-images" class="reader-images"></div>
+    <div class="dialog-actions">
+      <button type="button" id="post-delete" class="btn btn-danger">삭제</button>
+      <button type="button" id="post-edit" class="btn btn-ghost">수정</button>
+    </div>
+  </dialog>
+
   <!-- ===================== FOOTER ===================== -->
   <footer class="site">
     <div class="wrap foot-inner">
@@ -559,5 +615,6 @@
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   </script>
+  <script src="posts.js" defer></script>
 </body>
 </html>
