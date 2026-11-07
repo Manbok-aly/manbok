@@ -36,7 +36,7 @@
 .reader-body :is(ul, ol) { padding-left: 1.4em; }
 .reader-body li + li { margin-top: 4px; }
 .reader-body img { display: block; width: auto; max-width: 100%; height: auto; border-radius: 12px; margin: 18px 0; }
-.reader-body blockquote { border-left: 3px solid var(--brand); padding: 4px 0 4px 16px; color: var(--text-mid); }
+.reader-body blockquote { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; color: var(--text-mid); }
 .reader-body hr { border: 0; border-top: 1px solid var(--border); margin: 28px 0; }
 .reader-body code { font-family: var(--mono); font-size: .86em; background: var(--surface-2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 6px; }
 .reader-body pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px; overflow-x: auto; line-height: 1.6; }
