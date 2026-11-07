@@ -1,0 +1,4 @@
+node_modules/
+_site/
+# Obsidian vault settings (when this repo is opened as a vault)
+.obsidian/

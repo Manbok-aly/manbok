@@ -1,0 +1,19 @@
+{
+  "name": "manbok-portfolio",
+  "private": true,
+  "type": "module",
+  "description": "Static portfolio built from posts/*.md and images/ for GitHub Pages",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "preview": "node scripts/build.js && node scripts/preview.js"
+  },
+  "engines": {
+    "node": ">=20.18.1"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0",
+    "gray-matter": "4.0.3",
+    "js-yaml": "4.1.1",
+    "markdown-it": "14.1.1"
+  }
+}
