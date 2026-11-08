@@ -2,11 +2,12 @@
 title: 관심분야 논문 리뷰하기      # 필수
 category: papers                     # 필수 (아래 표 중 하나)
 date: 2026-11-07                   # 필수, YYYY-MM-DD
-summary: DIRTYFREE : review  # 선택 (없으면 본문 앞부분 사용)
+summary: DIRTYFREE # 선택 (없으면 본문 앞부분 사용)
 cover: ../images/dirtyfreepaper.png   # 선택, 목록 카드 썸네일
 draft: false                        # 선택, true면 사이트에 올라가지 않음
 ---
 
+---
 ## NDSS 2026 -
 
 ### DirtyFree : simplified Data Oriented Programming in the Linux Kernal
