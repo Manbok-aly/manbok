@@ -1,15 +1,15 @@
 ---
 title: 관심분야 논문 리뷰하기 # 필수
 category: papers # 필수 (아래 표 중 하나)
-date: 2026-11-07 # 필수, YYYY-MM-DD
+date: 2026-11-12 # 필수, YYYY-MM-DD
 summary: DIRTYFREE # 선택 (없으면 본문 앞부분 사용)
 cover: ../images/dirtyfreepaper.png # 선택, 목록 카드 썸네일
 draft: false # 선택, true면 사이트에 올라가지 않음
 ---
 
-NDSS 2026
+- **NDSS 2026**
 
-# DirtyFree : simplified Data Oriented Programming in the Linux Kernal
+# DirtyFree : simplified Data Oriented Programming in the Linux Kernel
 
 _논문을 읽기 전_
 
@@ -154,22 +154,38 @@ DirtyCred : 14개 공격 가능하나, double-free는 temporal cross-cache에 �
 
 - **다른 OS** : macOS/FreeBSD도 적용 여지가 있다고 하지만 실제 구현은 안했음 (적절한 보안 객체 식별이 관건)
 
-- **정적분석의 보수성** : 임시객체 필터가 over-approximation 하는 경우가 있어서 false negative 발생 가능. <br>path-sensitive 분석을 더하면 객체 집합을 넓힐 수 있다고 함
+- **정적분석의 보수성** : 임시객체 필터가 over-approximation 하는 경우가 있어서 false negative 발생 가능. <br> path-sensitive 분석을 더하면 객체 집합을 넓힐 수 있다고 함
 
-- **방어의 한계** : 두 완화책 모두 "알려진 임의해제 객체"를 전제로 함 -> 새 객체가 발견되면 추가 갱신이 필요 <br>(단, macOS zone_require 등 기존 OS 방어도 공유하는 일반적인 유지보수 특성이긴 함)
+- **방어의 한계** : 두 완화책 모두 "알려진 임의해제 객체"를 전제로 함 -> 새 객체가 발견되면 추가 갱신이 필요 <br> (단, macOS zone_require 등 기존 OS 방어도 공유하는 일반적인 유지보수 특성이긴 함)
 
 ## 7. 내가 보기에 앞으로 이어서 해볼 만한 방향
 
-리뷰는 반드시 기승전결이 보이게 작성한다.
+### 느낀 점·배운 점
 
-기: 이 논문이 등장한 배경과 문제의식
-승: 저자들이 제안한 핵심 접근 방식
-전: 실험 결과와 실제 성과, 혹은 드러난 한계
-결: 내가 느낀 점, 배운 점, 이후 해볼 만한 확장 아이디어
+DIRTYFREE의 핵심은 제어 흐름을 건드리지 않고 데이터/객체만 바꿔치기한다는 점이다.
+KCFI의 등장으로 ROP가 막힌 지금, 그 방어가 놓치는 맹점(데이터 계층)을 파고든 논문이라
+현재 커널 보안의 방향성을 이해하는 데 도움이 되었다.
+유저랜드 pwn 경험만 있던 내게 이 논문은 UAF·힙·SLUB·cross-cache 같은 개념을
+기초부터 다시 잡게 했고, 커널 pwn이라는 분야에 처음으로 발을 들이는 계기가 되었다.
 
-리뷰를 마무리할 때는 반드시 앞으로 할 것까지 적는다.
+### 더 읽어볼 논문
 
-이 논문을 바탕으로 더 읽어볼 논문
-비슷한 문제를 다른 분야에 적용할 가능성
-직접 구현, 재현, 비교해보고 싶은 포인트
-내가 연구/프로젝트로 발전시킨다면 어떤 방향으로 갈지
+본 논문의 선행 연구인 "Dirty cred"라는 논문에 대해 읽어보며 어떻게 이런 아이디어가 나오게 되었는제 알고싶다.
+
+### 다른 분야 적용 가능성
+
+다른 유저랜드, 브라우저 에서 또한 cross-cache같은 방식의 취약점이 있는지 찾고 비슷한 방법과 방어하는 방향에서의 관점을 조사하고 싶다
+
+### 직접 재현·비교해보고 싶은 포인트
+
+로컬 VM에서 직접 Arbitary free, Arbitrary object filtering부분에 대해 직접 구현하여 보고싶다. 구현하며 보아야할 부분과 보지말아야할 부분에 대한 감각을 키우고 레드팀의 관점, 블루팀의 관점에 대해 통찰을 해보고싶다.
+
+### 연구/프로젝트로 발전시킨다면
+
+DirtyFree는 arbitrary free를 cred 교체에 집중해 적용했다.
+(그 이전 DirtyCred는 cred·struct file을 double-free + cross-cache로 교체했다)
+arbitrary free는 원래 임의의 객체를 UAF로 만드는 범용 능력이다.
+그래서 이 arbitrary free 전략을 cred 외의 다른 권한 구조체에도
+적용할 수 있는지 필자는 분석해보고 싶다.
+
+_서강렬_
