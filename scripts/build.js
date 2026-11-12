@@ -243,6 +243,7 @@ function homePage(template, posts) {
     const section = $(`section#${id}`);
     const entries = posts.filter((post) => post.category === id);
     section.find('.count').text(`${entries.length} ${unit}`);
+    $(`[data-count="${id}"]`).text(String(entries.length));
     if (!entries.length) continue;
     const grid = section.find('.grid');
     grid.find('.empty').remove();
