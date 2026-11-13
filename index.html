@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manbok · Security Portfolio</title>
-  <meta name="description" content="정보보안을 공부하는 학부생 Manbok의 포트폴리오 — 개발, CTF/Wargame, Bug Bounty, 기술문서, 논문, 공모전·자격증" />
-  <meta property="og:title" content="Manbok · Security Portfolio" />
-  <meta property="og:description" content="Knights Frontier 3기 · 보안을 공부하는 학부생의 포트폴리오" />
+  <title>Manbok · Security Developer</title>
+  <meta name="description" content="보안 개발자 Manbok의 포트폴리오 — 개발, CTF/Wargame, Bug Bounty, 기술문서, 논문, 공모전·자격증" />
+  <meta property="og:title" content="Manbok · Security Developer" />
+  <meta property="og:description" content="Pwnable · Reversing 중심의 보안 개발자 Manbok의 포트폴리오" />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,29 +16,27 @@
     :root {
       color-scheme: dark;
 
-      /* neutral dark base + a single mint accent */
-      --bg: #0a0a0c;
-      --bg-2: #0e0e11;
-      --surface: #131317;
-      --surface-2: #1b1b20;
-      --border: #232329;
-      --border-light: #34343c;
+      /* black base + one solid yellow accent */
+      --bg: #0a0a0a;
+      --bg-2: #0f0f0f;
+      --surface: #141414;
+      --surface-2: #1c1c1c;
+      --border: #262626;
+      --border-light: #3a3a3a;
 
-      --text: #f2f2f4;
-      --text-mid: #a6a6b0;
-      --text-dim: #8a8a94;
+      --text: #f5f5f5;
+      --text-mid: #a8a8a8;
+      --text-dim: #8c8c8c;
 
-      --brand: #6ee7b7;
-      --brand-ink: #04130d;               /* text on top of --brand */
-      --brand-soft: rgba(110, 231, 183, .1);
+      --brand: #facc15;
+      --brand-ink: #0a0a0a;               /* text on top of --brand */
 
-      --radius: 18px;
-      --radius-sm: 10px;
+      --radius: 10px;
+      --radius-sm: 6px;
       --maxw: 1120px;
       --nav-h: 64px;
       --mono: 'JetBrains Mono', ui-monospace, monospace;
       --sans: 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      --shadow: 0 24px 60px -30px rgba(0, 0, 0, .8);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,78 +52,57 @@
       overflow-x: hidden;
     }
     a { color: inherit; text-decoration: none; }
-    ::selection { background: rgba(110, 231, 183, .28); }
-
-    /* one soft glow behind the top of the page */
-    body::before {
-      content: "";
-      position: fixed; inset: 0; z-index: -2;
-      background: radial-gradient(900px 460px at 50% -200px, rgba(110, 231, 183, .1), transparent 70%);
-      pointer-events: none;
-    }
+    ::selection { background: var(--brand); color: var(--brand-ink); }
 
     .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: 24px; }
 
     /* ===================== NAV ===================== */
     header.nav {
       position: sticky; top: 0; z-index: 100;
-      -webkit-backdrop-filter: blur(16px) saturate(140%);
-      backdrop-filter: blur(16px) saturate(140%);
-      background: rgba(10, 10, 12, .72);
-      border-bottom: 1px solid transparent;
-      transition: border-color .3s;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
-    header.nav.scrolled { border-bottom-color: var(--border); }
     .nav-inner { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); }
     .logo { font-family: var(--mono); font-weight: 600; font-size: .98rem; display: flex; align-items: center; gap: 9px; }
-    .logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+    .logo .dot { width: 10px; height: 10px; background: var(--brand); }
     .logo b { font-weight: 600; color: var(--text-dim); }
     .nav-links { display: flex; align-items: center; gap: 2px; }
-    .nav-links a {
-      font-size: .88rem; color: var(--text-mid); padding: 7px 12px; border-radius: 8px;
-      transition: color .2s, background .2s;
-    }
-    .nav-links a:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+    .nav-links a { font-size: .88rem; color: var(--text-mid); padding: 7px 12px; }
+    .nav-links a:hover { color: var(--brand); }
     .nav-links a.nav-cta {
       margin-left: 10px; font-weight: 600; padding: 7px 16px;
-      color: var(--bg); background: var(--text); border-radius: 999px;
+      color: var(--brand-ink); background: var(--brand); border-radius: var(--radius-sm);
     }
-    .nav-links a.nav-cta:hover { color: var(--bg); background: #fff; }
-    .nav-toggle { display: none; background: none; border: 1px solid var(--border-light); color: var(--text); border-radius: 9px; padding: 5px 12px; font-size: 1.15rem; cursor: pointer; }
+    .nav-links a.nav-cta:hover { color: var(--brand-ink); }
+    .nav-toggle { display: none; background: none; border: 1px solid var(--border-light); color: var(--text); border-radius: var(--radius-sm); padding: 5px 12px; font-size: 1.15rem; cursor: pointer; }
 
-    /* ===================== HERO (bento) ===================== */
+    /* ===================== HERO ===================== */
     .hero { padding-block: 36px 64px; }
     .bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
-    .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; }
+    .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
 
-    .intro {
-      grid-column: span 8; display: flex; flex-direction: column; padding: 44px;
-      background: radial-gradient(620px 320px at 0% 0%, rgba(110, 231, 183, .08), transparent 70%), var(--surface);
-    }
+    .intro { grid-column: span 8; display: flex; flex-direction: column; padding: 44px; }
     .eyebrow {
       align-self: flex-start; display: inline-flex; align-items: center; gap: 9px;
-      font-family: var(--mono); font-size: .76rem; color: var(--text-mid);
-      border: 1px solid var(--border-light); padding: 5px 13px; border-radius: 999px; margin-bottom: 26px;
+      font-family: var(--mono); font-size: .76rem; color: var(--text-mid); margin-bottom: 26px;
     }
-    .eyebrow .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); position: relative; }
-    .eyebrow .pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid var(--brand); animation: ping 1.8s ease-out infinite; }
-    @keyframes ping { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.9); opacity: 0; } }
+    .eyebrow .pulse { width: 8px; height: 8px; background: var(--brand); }
 
-    .hero h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: 1.16; letter-spacing: -.03em; font-weight: 700; }
-    .hero h1 .grad { color: var(--brand); }
+    .hero h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: 1.2; letter-spacing: -.03em; font-weight: 700; }
+    .hero h1 .grad {
+      background: var(--brand); color: var(--brand-ink); padding: 0 .12em;
+      -webkit-box-decoration-break: clone; box-decoration-break: clone;
+    }
     .hero .lead { color: var(--text-mid); font-size: 1.06rem; margin-top: 20px; max-width: 48ch; }
     .hero .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
     .btn {
       display: inline-flex; align-items: center; gap: 9px;
-      font-size: .93rem; font-weight: 600; padding: 11px 20px; border-radius: 999px;
+      font-size: .93rem; font-weight: 600; padding: 11px 20px; border-radius: var(--radius-sm);
       border: 1px solid transparent; cursor: pointer;
-      transition: transform .15s, filter .15s, background .2s, border-color .2s;
     }
-    .btn:hover { transform: translateY(-2px); }
     .btn-primary { background: var(--brand); color: var(--brand-ink); }
-    .btn-primary:hover { filter: brightness(1.08); }
     .btn-ghost { border-color: var(--border-light); color: var(--text); }
-    .btn-ghost:hover { background: var(--surface-2); }
+    .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
 
     .hero-stats {
       display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;
@@ -151,24 +128,21 @@
     .profile-card .socials a {
       flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px;
       font-size: .84rem; font-weight: 500; color: var(--text-mid);
-      background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 10px;
-      transition: color .2s, border-color .2s;
+      border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 10px;
     }
-    .profile-card .socials a:hover { color: var(--text); border-color: var(--border-light); }
+    .profile-card .socials a:hover { color: var(--brand); border-color: var(--brand); }
     .profile-card .socials svg { width: 15px; height: 15px; }
 
     /* category shortcuts */
     .quick-row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
     .quick {
       display: flex; flex-direction: column; justify-content: space-between; gap: 22px;
-      padding: 16px 18px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);
-      transition: transform .2s, border-color .2s, background .2s;
+      padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius);
     }
-    .quick:hover { transform: translateY(-2px); border-color: var(--border-light); background: var(--surface); }
+    .quick:hover { border-color: var(--brand); }
     .quick .q-top { display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: .75rem; color: var(--text-dim); }
-    .quick .q-num { transition: color .2s; }
-    .quick:hover .q-num { color: var(--brand); }
-    .quick .q-count { min-width: 26px; text-align: center; padding: 0 8px; border-radius: 999px; background: var(--surface-2); color: var(--text-mid); }
+    .quick .q-num { color: var(--brand); }
+    .quick .q-count { min-width: 26px; text-align: center; color: var(--text-mid); }
     .quick .q-name { font-size: .95rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
 
     /* ===================== SECTIONS ===================== */
@@ -187,16 +161,15 @@
     .sec-head .kicker { font-family: var(--mono); font-size: .78rem; color: var(--brand); }
     .sec-head h2 { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.35; }
     .sec-head .desc { color: var(--text-dim); font-size: .9rem; line-height: 1.65; }
-    .sec-head .count { font-family: var(--mono); font-size: .76rem; color: var(--text-mid); border: 1px solid var(--border); padding: 3px 11px; border-radius: 999px; }
+    .sec-head .count { font-family: var(--mono); font-size: .76rem; color: var(--text-dim); }
 
     /* ===================== CARDS ===================== */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; align-content: start; }
     .card {
       position: relative; background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius); padding: 24px; overflow: hidden;
-      transition: transform .2s, border-color .2s, box-shadow .2s;
     }
-    .card:hover { transform: translateY(-3px); border-color: var(--border-light); box-shadow: var(--shadow); }
+    .card:hover { border-color: var(--brand); }
     .card h3 { font-size: 1.1rem; font-weight: 700; letter-spacing: -.01em; line-height: 1.45; margin: 10px 0 8px; }
     .card p { color: var(--text-mid); font-size: .92rem; }
     .card .foot { margin-top: 18px; display: flex; align-items: center; justify-content: space-between; }
@@ -207,11 +180,11 @@
     .empty {
       grid-column: 1 / -1;
       display: flex; align-items: center; gap: 16px;
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 20px 22px; background: var(--bg-2);
+      border: 1px dashed var(--border-light); border-radius: var(--radius);
+      padding: 20px 22px;
     }
-    .empty .ic { width: 38px; height: 38px; border-radius: 11px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; flex: none; }
-    .empty .ic svg { width: 19px; height: 19px; color: var(--text-mid); }
+    .empty .ic { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex: none; }
+    .empty .ic svg { width: 20px; height: 20px; color: var(--text-dim); }
     .empty .t { font-size: .9rem; line-height: 1.65; color: var(--text-dim); }
     .empty .t b { color: var(--text); font-weight: 600; }
     .empty .t span { font-family: var(--mono); font-size: .76rem; }
@@ -225,12 +198,16 @@
     /* ===================== CONTACT ===================== */
     .contact {
       display: flex; align-items: center; justify-content: space-between; gap: 28px 40px; flex-wrap: wrap;
-      background: radial-gradient(520px 260px at 100% 0%, rgba(110, 231, 183, .1), transparent 70%), var(--surface);
-      border: 1px solid var(--border); border-radius: 24px; padding: 44px;
+      background: var(--brand); color: var(--brand-ink);
+      border-radius: var(--radius); padding: 44px;
     }
     .contact h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.3; }
-    .contact p { color: var(--text-mid); margin-top: 8px; }
+    .contact p { color: rgba(10, 10, 10, .72); margin-top: 8px; }
     .contact .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .contact .btn-primary { background: var(--brand-ink); color: var(--brand); }
+    .contact .btn-ghost { border-color: var(--brand-ink); color: var(--brand-ink); }
+    .contact .btn-ghost:hover { background: var(--brand-ink); color: var(--brand); }
+    .contact :is(a, button):focus-visible { outline-color: var(--brand-ink); }
 
     /* ===================== FOOTER ===================== */
     footer.site { border-top: 1px solid var(--border); margin-top: 24px; padding: 28px 0; }
@@ -238,16 +215,15 @@
     .foot-inner .c { font-family: var(--mono); font-size: .78rem; color: var(--text-dim); }
     .foot-inner .links { display: flex; gap: 18px; }
     .foot-inner .links a { font-size: .85rem; color: var(--text-mid); }
-    .foot-inner .links a:hover { color: var(--text); }
+    .foot-inner .links a:hover { color: var(--brand); }
 
     /* to top */
-    .totop { position: fixed; right: 24px; bottom: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border-light); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .3s, transform .2s; z-index: 90; }
+    .totop { position: fixed; right: 24px; bottom: 24px; width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--brand); border: 0; color: var(--brand-ink); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 90; }
     .totop.show { opacity: 1; pointer-events: auto; }
-    .totop:hover { transform: translateY(-3px); }
 
-    /* reveal animation */
-    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1); }
-    .reveal.in { opacity: 1; transform: none; }
+    /* reveal: a plain fade-in */
+    .reveal { opacity: 0; transition: opacity .4s ease; }
+    .reveal.in { opacity: 1; }
 
     /* ===================== RESPONSIVE ===================== */
     @media (max-width: 960px) {
@@ -268,8 +244,7 @@
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .reveal { opacity: 1; transform: none; transition: none; }
-      .eyebrow .pulse::after { animation: none; }
+      .reveal { opacity: 1; transition: none; }
     }
   </style>
   <link rel="stylesheet" href="posts.css" />
@@ -299,11 +274,11 @@
     <section class="hero wrap">
       <div class="bento">
         <div class="tile intro reveal">
-          <span class="eyebrow"><span class="pulse"></span>Knights Frontier 3기 · Security Track</span>
-          <h1>보안을 <span class="grad">공격하며 배우는</span><br />학부생 개발자입니다.</h1>
+          <span class="eyebrow"><span class="pulse"></span>Security Developer · Pwnable · Reversing</span>
+          <h1>보안 공부 <span class="grad">기록</span>을<br />남기는 곳입니다.</h1>
           <p class="lead">
-            취약점을 찾고, 익스플로잇을 작성하고, 배운 것을 글로 남깁니다.
-            개발부터 CTF·버그바운티·연구까지 — 학습과 활동의 기록을 한곳에 정리합니다.
+            시스템이 어디서 무너지는지 코드 수준까지 파고들고, 찾은 취약점은 익스플로잇과 도구로 직접 구현합니다.
+            개발 · CTF · 버그바운티 · 연구 활동의 결과물을 이곳에 정리했습니다.
           </p>
           <div class="actions">
             <a href="#dev" class="btn btn-primary">
@@ -313,9 +288,9 @@
             <a href="#contact" class="btn btn-ghost">연락하기</a>
           </div>
           <div class="hero-stats">
-            <div class="st"><div class="n">3rd</div><div class="l">학부 3학년</div></div>
+            <div class="st"><div class="n">Pwn</div><div class="l">주력 · Pwnable / Reversing</div></div>
+            <div class="st"><div class="n">KF3</div><div class="l">HSPACE Knights Frontier</div></div>
             <div class="st"><div class="n">6</div><div class="l">활동 카테고리</div></div>
-            <div class="st"><div class="n">∞</div><div class="l">배우는 중</div></div>
           </div>
         </div>
 
@@ -332,17 +307,25 @@
             </div>
             <div>
               <h2 class="profile-name">Manbok</h2>
-              <div class="handle">@Manbok-aly</div>
+              <div class="handle">Security Developer · @Manbok-aly</div>
             </div>
           </div>
           <ul class="meta">
             <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              정보보안 복수전공 · 학부 3학년
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
+              충남대학교 환경소재공학과
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
-              Reversing · Pwnable
+              정보보안학과 복수전공
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 21v-7M4 14l6-2 4 2 6-2V5l-6 2-4-2-6 2z"/></svg>
+              HSPACE Knights Frontier 3기 이수 중
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg>
+              Pwnable · Reversing
             </li>
             <li>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
@@ -383,18 +366,18 @@
       </div>
       <div class="about-text reveal">
         <p>
-          안녕하세요, <span class="hl">정보보안을 공부하는 학부 3학년 Manbok</span>입니다.
-          시스템이 어떻게 동작하고 또 어떻게 무너지는지에 관심이 많아, 공격자의 시선으로
-          문제를 바라보고 그 이해를 방어로 연결하는 과정을 즐깁니다.
+          안녕하세요, <span class="hl">보안 개발자 Manbok</span>입니다.
+          프로그램이 어떻게 동작하고 어디서 무너지는지를 코드 수준에서 이해하는 일에 강점이 있습니다.
+          바이너리를 분석해 취약점을 찾고, 익스플로잇과 분석 도구를 직접 작성해 그 결과를 증명합니다.
         </p>
         <p>
-          현재 <span class="hl">Knights Frontier 3기</span>에서 보안을 깊이 있게 학습하며,
-          CTF와 워게임으로 손을 풀고, 버그바운티로 실전 감각을 기르고 있습니다.
-          배운 내용은 반드시 글로 정리해 남기는 것을 원칙으로 합니다.
+          <span class="hl">충남대학교 환경소재공학과</span>에서 <span class="hl">정보보안학과를 복수전공</span>하고 있으며,
+          현재 <span class="hl">HSPACE Knights Frontier 3기</span> 과정을 이수하고 있습니다.
+          Pwnable과 Reversing을 주력으로 CTF·워게임과 버그바운티에서 실전 역량을 쌓고 있습니다.
         </p>
         <p>
-          이 포트폴리오는 <span class="hl">개발 · CTF · 버그바운티 · 기술문서 · 논문 · 공모전</span>의
-          여섯 갈래로 제 성장 기록을 모아두는 공간입니다. 아래에서 각 활동을 확인해 주세요.
+          만든 것은 코드로, 배운 것은 글로 남기는 것을 원칙으로 합니다.
+          아래에 <span class="hl">개발 · CTF · 버그바운티 · 기술문서 · 논문 · 공모전</span> 여섯 분야의 결과물을 정리했습니다.
         </p>
       </div>
     </section>
@@ -405,7 +388,7 @@
         <div class="left">
           <span class="kicker">01</span>
           <h2>개발 · Development</h2>
-          <p class="desc">보안 도구, 사이드 프로젝트, 자동화 스크립트 등 직접 만든 결과물.</p>
+          <p class="desc">직접 설계하고 구현한 보안 도구, 프로젝트, 자동화 스크립트.</p>
         </div>
         <span class="count">0 projects</span>
       </div>
@@ -511,8 +494,8 @@
     <section class="sec wrap" id="contact">
       <div class="contact reveal">
         <div>
-          <h2>함께 이야기 나눠요</h2>
-          <p>협업 제안, 스터디, 혹은 그냥 보안 이야기까지 — 편하게 연락 주세요.</p>
+          <h2>함께 일할 기회를 찾고 있습니다</h2>
+          <p>채용·인턴십 제안과 프로젝트 협업 모두 환영합니다. 메일 주시면 빠르게 회신드리겠습니다.</p>
         </div>
         <div class="actions">
           <a href="mailto:namu1825@naver.com" class="btn btn-primary">
@@ -531,7 +514,7 @@
   <!-- ===================== FOOTER ===================== -->
   <footer class="site">
     <div class="wrap foot-inner">
-      <span class="c">© 2026 Manbok · Knights Frontier 3기</span>
+      <span class="c">© 2026 Manbok · Security Developer</span>
       <div class="links">
         <a href="https://github.com/Manbok-aly" target="_blank" rel="noopener">GitHub</a>
         <a href="mailto:namu1825@naver.com">Email</a>
