@@ -275,7 +275,7 @@ function postPage(template, post) {
   article.append($('<p class="field-hint"></p>').append(
     $('<time></time>').attr('datetime', post.date).text(dateFormat.format(new Date(post.date)))));
   article.append($('<div class="reader-body"></div>').html(post.html));
-  $('main').empty().append($('<section class="sec wrap"></section>').append(article));
+  $('main').empty().append($('<section class="sec wrap post-section"></section>').append(article));
   return $.html();
 }
 
