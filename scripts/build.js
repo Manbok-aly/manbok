@@ -1,5 +1,7 @@
 // Static site builder.
-//   posts/<slug>.md  +  images/<slug>/*   ->   _site/
+//   posts/**/<slug>.md  +  images/**   ->   _site/
+// Posts may sit in subfolders of posts/ (for your own organisation); the URL is
+// always /posts/<slug>/, so file names must be unique across all folders.
 // index.html is the design template: the home page is index.html with post cards
 // filled into each category section, and every post page reuses its head, nav and footer.
 
@@ -76,20 +78,36 @@ const matterOptions = {
 
 const md = new MarkdownIt({ html: false, linkify: true });
 
+// Raw HTML stays off (tags are shown as text), except <br>, <br/>, <br /> which
+// become line breaks — handy for a line break inside a paragraph or table cell.
+// Code spans and code blocks are left untouched.
+const BR_RE = /^<br\s*\/?>/i;
+md.inline.ruler.before('html_inline', 'br_tag', (state, silent) => {
+  if (state.src.charCodeAt(state.pos) !== 0x3C /* < */) return false;
+  const m = BR_RE.exec(state.src.slice(state.pos, state.pos + 8));
+  if (!m) return false;
+  if (!silent) state.push('hardbreak', 'br', 0);
+  state.pos += m[0].length;
+  return true;
+});
+
 // Turn an image path written relative to posts/<slug>.md (as Obsidian expects)
 // into a site URL, and remember the file so it gets copied. Returns null on error.
-function resolveImage(src, where, errors, assets) {
+// "../images" for posts/a.md, "../../images" for posts/folder/a.md
+const imagesFrom = (file) => path.relative(path.dirname(file), IMAGES_DIR).split(path.sep).join('/');
+
+function resolveImage(src, where, errors, assets, file) {
   if (EXTERNAL_RE.test(src)) return src;
   if (src.startsWith('/')) {
-    errors.push(`${where}: 이미지 경로 "${src}" 는 / 로 시작할 수 없습니다. 글 파일 기준 상대경로(../images/<slug>/파일명)로 적어 주세요.`);
+    errors.push(`${where}: 이미지 경로 "${src}" 는 / 로 시작할 수 없습니다. 글 파일 기준 상대경로(${imagesFrom(file)}/파일명)로 적어 주세요.`);
     return null;
   }
   let decoded;
   try { decoded = decodeURIComponent(src.split(/[?#]/)[0]); } catch { decoded = src; }
-  const absolute = path.resolve(POSTS_DIR, decoded);
+  const absolute = path.resolve(path.dirname(file), decoded);
   const inImages = path.relative(IMAGES_DIR, absolute);
   if (!inImages || inImages.startsWith('..') || path.isAbsolute(inImages)) {
-    errors.push(`${where}: 이미지 "${src}" 가 images/ 폴더 밖을 가리킵니다. ../images/<slug>/파일명 형식으로 적어 주세요.`);
+    errors.push(`${where}: 이미지 "${src}" 가 images/ 폴더 밖을 가리킵니다. ${imagesFrom(file)}/파일명 형식으로 적어 주세요. (하위 폴더의 글은 ../ 를 한 번 더 붙여야 합니다)`);
     return null;
   }
   if (!existsExactCase(absolute)) {
@@ -163,7 +181,7 @@ function loadPost(file, errors, assets) {
   let cover = null;
   if (data.cover !== undefined && data.cover !== null && data.cover !== '') {
     if (typeof data.cover !== 'string') errors.push(`${where}: cover 는 이미지 경로 문자열이어야 합니다`);
-    else cover = resolveImage(md.normalizeLink(data.cover.trim()), `${where} (cover)`, errors, assets);
+    else cover = resolveImage(md.normalizeLink(data.cover.trim()), `${where} (cover)`, errors, assets, file);
   }
 
   const env = {};
@@ -172,11 +190,11 @@ function loadPost(file, errors, assets) {
   const visit = (list) => list.forEach((token) => {
     if (token.type === 'image') {
       imageCount += 1;
-      const src = resolveImage(token.attrGet('src'), where, errors, assets);
+      const src = resolveImage(token.attrGet('src'), where, errors, assets, file);
       if (src) token.attrSet('src', src);
       token.attrSet('loading', 'lazy');
     } else if (token.type === 'text' && token.content.includes('![[')) {
-      errors.push(`${where}: Obsidian 위키링크 이미지(![[...]])는 사이트에서 보이지 않습니다. ![설명](../images/${slug}/파일명) 형식으로 바꿔 주세요.`);
+      errors.push(`${where}: Obsidian 위키링크 이미지(![[...]])는 사이트에서 보이지 않습니다. ![설명](${imagesFrom(file)}/파일명) 형식으로 바꿔 주세요.`);
     }
     if (token.children) visit(token.children);
   });
@@ -286,16 +304,32 @@ function writeFile(target, content) {
   fs.writeFileSync(target, content);
 }
 
+// All .md files under posts/, including subfolders. Hidden folders (.obsidian, ...) are skipped.
+function collectPosts(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true })
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .flatMap((entry) => {
+      if (entry.name.startsWith('.')) return [];
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) return collectPosts(full);
+      return entry.isFile() && entry.name.toLowerCase().endsWith('.md') ? [full] : [];
+    });
+}
+
 function main() {
   const errors = [];
   const assets = new Set();
   const template = loadTemplate(errors, assets);
 
-  const files = fs.existsSync(POSTS_DIR)
-    ? fs.readdirSync(POSTS_DIR, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.md'))
-      .map((entry) => path.join(POSTS_DIR, entry.name))
-    : [];
+  const files = fs.existsSync(POSTS_DIR) ? collectPosts(POSTS_DIR) : [];
+  // Same file name in two folders would map to the same /posts/<slug>/ URL.
+  const bySlug = new Map();
+  for (const file of files) {
+    const slug = path.basename(file).replace(/.md$/i, '');
+    if (bySlug.has(slug)) {
+      errors.push(`${rel(file)}: 파일 이름 "${slug}" 가 ${rel(bySlug.get(slug))} 와 겹칩니다. 폴더가 달라도 글 주소는 /posts/${slug}/ 로 같으니 이름을 바꿔 주세요.`);
+    } else bySlug.set(slug, file);
+  }
   for (const file of files) {
     if (!file.endsWith('.md')) errors.push(`${rel(file)}: 확장자는 소문자 .md 여야 합니다`);
   }
