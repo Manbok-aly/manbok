@@ -21,6 +21,7 @@ const TEMPLATE = path.join(ROOT, 'index.html');
 
 // Section ids in index.html -> [label, unit used in the section's count badge].
 const CATEGORIES = {
+  skills: ['개인기술', 'posts'],
   dev: ['개발', 'projects'],
   ctf: ['CTF / Wargame', 'writeups'],
   bugbounty: ['Bug Bounty', 'reports'],

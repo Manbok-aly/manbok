@@ -1,6 +1,6 @@
 ---
 title: "나에 대해 기록하기" # 필수
-category: blog # 필수 (아래 표 중 하나)
+category: skills # 필수 (아래 표 중 하나)
 date: 2026-11-13 # 필수, YYYY-MM-DD
 summary: Let_me_introduce # 선택 (없으면 본문 앞부분 사용)
 cover: ../images/logo_1.png # 선택, 목록 카드 썸네일

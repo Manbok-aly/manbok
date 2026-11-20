@@ -32,6 +32,7 @@ draft: true                        # 선택, true면 사이트에 올라가지 �
 
 | category | 섹션 |
 |---|---|
+| `skills` | 개인기술 |
 | `dev` | 개발 |
 | `ctf` | CTF / Wargame |
 | `bugbounty` | Bug Bounty |
