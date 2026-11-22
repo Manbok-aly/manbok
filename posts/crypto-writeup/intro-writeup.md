@@ -10,7 +10,7 @@ draft: false # 선택, true면 사이트에 올라가지 않음
 # CryptoHack_CTF
 > https://cryptohack.org/
 
-현재 위 사이트의 ctf writeup을 정리하였습니다.
+현재 위 사이트의 ctf writeup을 정리하여 놓았습니다
 
 ## Find_flag
 
