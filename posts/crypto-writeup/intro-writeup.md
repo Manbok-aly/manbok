@@ -32,7 +32,7 @@ draft: false # 선택, true면 사이트에 올라가지 않음
 
 _chr()_ 함수를 사용하면 ASCII 번호를 문자로 치환이 가능하다.
 
-![그림1](../../images/ascii_pic1.png)
+![그림1](../../images/crypto-writeup/ascii_pic1.png)
 
 > crypto{ASCII_pr1nt4bl3}
 
@@ -47,7 +47,7 @@ _chr()_ 함수를 사용하면 ASCII 번호를 문자로 치환이 가능하다.
 
 16진수로 인코딩된 문제를 python에서 bytes.fromhex()를 통해 byte로 변환이 가능합니다.
 
-![그림2](../../images/Hex_pic1.png)
+![그림2](../../images/crypto-writeup/Hex_pic1.png)
 
 > crypto{You_will_be_working_with_hex_strings_a_lot}
 
@@ -57,7 +57,7 @@ _chr()_ 함수를 사용하면 ASCII 번호를 문자로 치환이 가능하다.
 
 > 72bca9b68fc16ac7beeb8f849dca1d8a783e8acf9679bf9269f7bf
 
-![그림3](../../images/base64.png)
+![그림3](../../images/crypto-writeup/base64.png)
 
 Base64를 임포트해 **base64.b64encode()**를 사용하였다.
 
@@ -67,7 +67,7 @@ Base64를 임포트해 **base64.b64encode()**를 사용하였다.
 
 pip 으로 pycryptodome을 설치한후
 
-![그림4](../../images/long1.png)
+![그림4](../../images/crypto-writeup/long1.png)
 
 > crypto{3nc0d1n6_4ll_7h3_w4y_d0wn}
 
@@ -81,7 +81,7 @@ label ^ 13 의 연산을 문제에서 crypto{new_string}양식에 맞게 작성�
 
 필자는 pwn 라이브러리를 통해 작성하였다.
 
-![그림5](../../images/xor_start.png)
+![그림5](../../images/crypto-writeup/xor_start.png)
 
 label string을 byte로 만든후 13과 xor 연산을 하여 출력한다
 
@@ -108,6 +108,6 @@ FLAG ^ KEY1 ^ KEY3 ^ KEY2 = 04ee9855208a2cd59091d04767ae47963170d1660df7f56f5faf
 **(FLAG ^ KEY1 ^ KEY3 ^ KEY2) ^ KEY1 ^ (KEY2 ^ KEY3)** 을 통해<br>
 FLAG를 구할수 있다.
 
-![그림5](../../images/xor_pro.png)
+![그림5](../../images/crypto-writeup/xor_pro.png)
 
 >crypto{x0r_i5_ass0c1at1v3}
