@@ -19,7 +19,7 @@ KEY2 ^ KEY3 = c1545756687e7573db23aa1c3452a098b71a7fbf0fddddde5fc1<br>
 FLAG ^ KEY1 ^ KEY3 ^ KEY2 = 04ee9855208a2cd59091d04767ae47963170d1660df7f56f5faf
 ```
 
-먼저 16진수 값을 byte로 decoe하여 K1의 값을 구한다.
+먼저 16진수 값을 byte로 decoe하여 `K1`의 값을 구한다.
 
 이후 xor 특성에 근거하여 (동일값끼리 만나면 0이 된다)
 
@@ -56,7 +56,7 @@ for key in range(256):
 
 1바이트 데이터를 숨겨놓았으므로 임의의 키값을 디코딩한 값 x에 무차별 대입(y)을 해줍니다.
 
-Flag형식이 crypto{""} 의 형태이므로
+Flag형식이 `crypto{""}` 의 형태이므로
 
 만약 생성된 문자열이 "crypto"를 포함할경우 출력하는 형태를 만들어줍니다.
 
@@ -115,7 +115,47 @@ print(result.decode())
 
 ## Lemur XOR
 
+이미지 2장을 제시해주고 Flag를 찾는 문제입니다.
+먼저 두 이미 RGB의 byte를 xor연산을 해보겠습니다.
+
+```
+from PIL import Image
+
+img1 = Image.open("lemur.png").convert("RGB")
+img2 = Image.open("flag.png").convert("RGB")
+
+b1 = img1.tobytes()   
+b2 = img2.tobytes()
+
+xored = bytes(a ^ b for a, b in zip(b1, b2))
+
+result = Image.frombytes("RGB", img1.size, xored)
+result.save("result.png")
+result.show()
+```
+
+두 이미지를 이렇게 xor 연산을 해보면
+![그림6](../../images/crypto-writeup/result.png)
+
+해당 이미지가 나옴을 알수 있습니다.
+
+> crypto{X0Rly_n0t!}
+
 ## Greatest Common Divisor
+
+gcd(a,b)를 구하는 알고리즘을 구현하는 문제입니다.
+
+이번문제의 FLAG는 `gcd(66528,52920)`의 값을 구하면 됩니다.
+
+```
+def gcd_rec(a: int, b: int) -> int:
+    return abs(a) if b == 0 else gcd_rec(b, a % b)
+```
+재귀함수를 이용해 유클리드 알고리즘을 구현하였습니다.
+
+이제 해당값을 대입하면 
+
+> 
 
 ## Extended GCD
 
