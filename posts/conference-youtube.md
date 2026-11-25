@@ -1,8 +1,10 @@
 ---
-title: "[Black Hat USA 2026] LANJack: 광고를 IoT 정찰 도구로 악용하기 리뷰"
+title: "[Black Hat USA 2026] LANJack 발표 리뷰"
+category: papers
 date: 2026-11-25
-category: 논문/컨퍼런스
-tags: [BlackHat, DNS-Rebinding, Malvertising, IoT, CSP, 웹보안]
+summary: 해외 컨퍼런스 영상 리뷰
+cover: ../images/blackhat.png # 선택, 목록 카드 썸네일
+draft: false # 선택, true면 사이트에 올라가지 않음
 ---
 
 # [Black Hat USA 2026] LANJack 발표 리뷰
@@ -25,6 +27,7 @@ DNS Rebinding은 이 전화번호부를 공격자가 직접 운영하면서 **�
  
 ### iframe
 웹페이지 안에 다른 웹페이지를 끼워 넣는 창이다. 광고도 대부분 iframe으로 뜬다. 크기를 1픽셀로 만들거나 숨기면 사용자는 그런 게 있는지도 모른다.
+지금 현재 본문에서 쓰고있는 youtube 영상도 iframe이다!
  
 ### CSP(Content Security Policy)
 "이 페이지에서는 이 사이트들 것만 불러와도 된다"고 정해두는 허용 목록이다. 규칙을 어기면 브라우저가 막고, 설정해둔 주소로 "누가 규칙 어겼다"는 신고(리포트)를 보낸다. 원래는 XSS 같은 공격을 막으려고 만든 방어 기능이다.
@@ -48,6 +51,9 @@ DNS Rebinding은 이 전화번호부를 공격자가 직접 운영하면서 **�
 그런데 정작 광고 내용은 코카콜라 캠페인이었음. 트래픽을 따라가 보니 우리 집 내부망 주소로 가는 요청이 수천 개였고, `cam scanner`(카메라 스캐너)라는 파일을 받아서 결과를 외부 서버로 보내고 있었다. 광고가 노린 지역은 멕시코였고, 몇 년째 버전을 바꿔가며 운영되고 있었다고 한다.
  
 ### 공격 흐름 (5단계)
+
+
+![흐름도](../images/flowwork-lan.png)
  
 #### 1. 숨기 + 실행 경로 확보
  
