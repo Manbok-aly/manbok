@@ -155,9 +155,11 @@ def gcd_rec(a: int, b: int) -> int:
 
 이제 해당값을 대입하면 
 
-> 
+> 1512
 
 ## Extended GCD
+
+
 
 ## Modular Arithmetic 1
 
