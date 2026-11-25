@@ -48,6 +48,8 @@
 .reader-body li > :is(ul, ol), .reader-body li > p + p { margin-top: .6em; }
 .reader-body li::marker { color: var(--text-mid); }
 .reader-body img { display: block; width: auto; max-width: 100%; height: auto; border-radius: 12px; margin: 24px auto; }
+.reader-body iframe { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; border-radius: 12px; margin: 24px auto; background: #000; }
+.reader-body video { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 12px; margin: 24px auto; }
 .reader-body blockquote { background: var(--surface); border-left: 3px solid var(--brand); border-radius: var(--radius-sm); padding: 16px 20px; }
 .reader-body blockquote > * + * { margin-top: 1em; }
 .reader-body hr { border: 0; border-top: 1px solid var(--border); margin: 36px 0; }

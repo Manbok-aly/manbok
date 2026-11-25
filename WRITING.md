@@ -53,8 +53,20 @@ draft: true                        # 선택, true면 사이트에 올라가지 �
 - 폴더가 달라도 파일 이름은 겹치면 안 됩니다(글 주소가 같아지므로 빌드가 실패합니다).
 - 파일 이름의 대소문자와 확장자(`.png` 등)까지 정확히 맞춰야 합니다(Windows에서는 보여도 GitHub Pages에서는 깨집니다).
 - Obsidian을 쓴다면 **설정 → 파일 및 링크**에서 `[[위키링크]] 사용`을 끄고, 새 링크 형식을 `현재 파일 기준 상대 경로`로 바꿔 주세요. `![[사진.png]]` 형식은 사이트에 표시되지 않아 빌드가 실패합니다. Obsidian에 사진을 붙여넣으면 다른 폴더에 저장될 수 있으니 `images/<slug>/` 로 옮기고 경로를 맞춰 주세요.
-- 본문 속 HTML 태그는 실행되지 않고 글자로 표시됩니다. 단, 줄바꿈 `<br>` (`<br/>`, `<br />` 도 가능)은 적용됩니다. 표 칸 안에서도 쓸 수 있고, `` `코드` `` 안의 `<br>` 은 글자 그대로 남습니다.
+- 본문에 HTML 태그를 그대로 쓸 수 있습니다. 줄바꿈 `<br>` 은 표 칸 안에서도 쓸 수 있고, `` `코드` `` 나 코드 블록 안의 태그는 글자 그대로 남습니다. 태그를 글자로 보여 주고 싶으면 `` `<태그>` `` 처럼 코드로 감싸세요.
 - `<br>` 없이 줄바꿈하려면 줄 끝에 공백 두 칸을 넣거나, 빈 줄을 하나 넣어 문단을 나눕니다. Enter 한 번만 치면 사이트에서는 한 줄로 이어집니다.
+
+## 유튜브 영상 넣기
+유튜브 영상 아래 **공유 → 퍼가기** 에서 나오는 `<iframe>` 코드를 본문에 붙여넣으면 글 안에서 바로 재생됩니다. 앞뒤로 빈 줄을 하나씩 두세요. 크기(`width`, `height`)는 신경 쓰지 않아도 됩니다 — 사이트에서 본문 폭에 맞춘 16:9로 자동 조정됩니다.
+
+```html
+<iframe src="https://www.youtube.com/embed/영상ID" title="영상 제목" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+```
+
+- 영상ID는 `https://www.youtube.com/watch?v=XXXX` 의 `XXXX`, `https://youtu.be/XXXX` 의 `XXXX` 부분입니다.
+- 특정 시간부터 재생하려면 `embed/영상ID?start=90` (초 단위)처럼 붙입니다.
+- `referrerpolicy` 를 지우면 유튜브가 "오류 153" 을 띄우며 재생을 막을 수 있으니 그대로 두세요.
+- 로컬 미리보기는 `npm run preview` (http://localhost:4000/) 로 확인하세요. `_site` 의 html 파일을 더블클릭해서 열면 유튜브 영상이 재생되지 않습니다.
 
 빌드는 다음 경우 **실패**하고 어떤 파일의 어떤 문제인지 출력합니다: title·category·date 누락, 없는 카테고리, 잘못된 날짜, 존재하지 않는 이미지(본문·cover), images/ 밖을 가리키는 경로, `![[...]]` 이미지, 규칙에 맞지 않는 파일 이름, YAML 문법 오류.
 

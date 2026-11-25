@@ -158,10 +158,44 @@ def gcd_rec(a: int, b: int) -> int:
 > 1512
 
 ## Extended GCD
+ 
+확장 유클리드 알고리즘을 이용하여 a·u + b·v = gcd(a,b) 를 만족하는 정수 u, v를 구하는 문제이다.
+ 
+`p⋅u+q⋅v=gcd(p,q)`의 응용버전으로 
+ 
+> p = 26513, q = 32321 일때 p·u + q·v = gcd(p,q) 를 만족하는 u, v중 작은값을 플래그로 제출
+ 
+p, q 둘다 소수이므로 gcd(p,q)는 1이 나온다.
+ 
+유클리드 호제법은 gcd(a,b) = gcd(b, a mod b) 를 b가 0이 될때까지 반복하는 방식인데,
+ 
+확장 유클리드는 여기서 거꾸로 올라오면서 계수 u, v를 같이 계산해준다.
+ 
+a mod b = a - (a//b)·b 이므로 아래 단계에서 구한 x, y를 이용하면 위 단계의 계수는 (y, x - (a//b)·y) 가 된다.
+ 
+해당문제는 python3에서 재귀함수로 작성하였다.
+ 
+```
+def egcd(a, b):
+    if b == 0:
+        return a, 1, 0
+    g, x, y = egcd(b, a % b)
+    return g, y, x - (a // b) * y
 
+p, q = 26513, 32321
+print(egcd(p, q))
+```
 
+ 
+실행 결과 u = 10245, v = -8404 가 나왔고
+ 
+둘 중 작은값인 v를 제출한다.
+ 
+> -8404
 
 ## Modular Arithmetic 1
+
+
 
 ## Modular Arithmetic 2
 

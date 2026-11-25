@@ -77,20 +77,10 @@ const matterOptions = {
   engines: { yaml: (text) => yaml.load(text, { schema: yaml.CORE_SCHEMA }) ?? {} },
 };
 
-const md = new MarkdownIt({ html: false, linkify: true });
-
-// Raw HTML stays off (tags are shown as text), except <br>, <br/>, <br /> which
-// become line breaks — handy for a line break inside a paragraph or table cell.
-// Code spans and code blocks are left untouched.
-const BR_RE = /^<br\s*\/?>/i;
-md.inline.ruler.before('html_inline', 'br_tag', (state, silent) => {
-  if (state.src.charCodeAt(state.pos) !== 0x3C /* < */) return false;
-  const m = BR_RE.exec(state.src.slice(state.pos, state.pos + 8));
-  if (!m) return false;
-  if (!silent) state.push('hardbreak', 'br', 0);
-  state.pos += m[0].length;
-  return true;
-});
+// Raw HTML in posts is rendered as-is (<br>, <iframe> for YouTube, <video>, ...).
+// Only the site owner writes posts, so this is trusted content.
+// Code spans and code blocks are still shown as text.
+const md = new MarkdownIt({ html: true, linkify: true });
 
 // Turn an image path written relative to posts/<slug>.md (as Obsidian expects)
 // into a site URL, and remember the file so it gets copied. Returns null on error.
